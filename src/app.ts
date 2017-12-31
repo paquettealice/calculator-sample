@@ -6,7 +6,7 @@
 namespace calcApp {
   // For hotkeys
   export const allowedKeys = [
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.',
     '(', ')', '+', '-', '*', '/', 'Backspace', 'Delete'
   ];
   // Elements
@@ -17,7 +17,7 @@ namespace calcApp {
   export const store = {
     expression: {
       dispatch: (action: string, payload?: string) => {
-        const oldState = this.expressionDiv.textContent;
+        const oldState = expressionDiv.textContent;
         let newState = oldState;
 
         switch (action) {
@@ -25,7 +25,7 @@ namespace calcApp {
             newState = oldState + payload;
             break;
           case 'delete':
-            newState = this.expressionDiv.textContent.slice(0, -1);
+            newState = expressionDiv.textContent.slice(0, -1);
             break;
           case 'clear':
             newState = '';
@@ -50,10 +50,15 @@ namespace calcApp {
 
 /** MAIN ------------------------- **/
 document.addEventListener('keydown', (e: KeyboardEvent) => {
-  // if (calcApp.allowedKeys.includes(e.key)) {
-    // calcApp.store.expression.dispatch('write', e.key);
-    // console.log('allowed! ' + e.key);
-  // }
+  if (calcApp.allowedKeys.includes(e.key)) {
+    console.log('allowed! ' + e.key);
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      calcApp.store.expression.dispatch('delete');
+    }
+    else {
+      calcApp.store.expression.dispatch('write', e.key);
+    }
+  }
   console.log(e);
 });
 

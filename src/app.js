@@ -4,10 +4,9 @@
 /** Variables **/
 var calcApp;
 (function (calcApp) {
-    var _this = this;
     // For hotkeys
     calcApp.allowedKeys = [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.',
         '(', ')', '+', '-', '*', '/', 'Backspace', 'Delete'
     ];
     // Elements
@@ -18,14 +17,14 @@ var calcApp;
     calcApp.store = {
         expression: {
             dispatch: function (action, payload) {
-                var oldState = _this.expressionDiv.textContent;
+                var oldState = calcApp.expressionDiv.textContent;
                 var newState = oldState;
                 switch (action) {
                     case 'write':
                         newState = oldState + payload;
                         break;
                     case 'delete':
-                        newState = _this.expressionDiv.textContent.slice(0, -1);
+                        newState = calcApp.expressionDiv.textContent.slice(0, -1);
                         break;
                     case 'clear':
                         newState = '';
@@ -48,10 +47,15 @@ var calcApp;
 })(calcApp || (calcApp = {}));
 /** MAIN ------------------------- **/
 document.addEventListener('keydown', function (e) {
-    // if (calcApp.allowedKeys.includes(e.key)) {
-    // calcApp.store.expression.dispatch('write', e.key);
-    // console.log('allowed! ' + e.key);
-    // }
+    if (calcApp.allowedKeys.includes(e.key)) {
+        console.log('allowed! ' + e.key);
+        if (e.key === 'Backspace' || e.key === 'Delete') {
+            calcApp.store.expression.dispatch('delete');
+        }
+        else {
+            calcApp.store.expression.dispatch('write', e.key);
+        }
+    }
     console.log(e);
 });
 calcApp.expressionDiv.addEventListener('change', expressionChanged);
