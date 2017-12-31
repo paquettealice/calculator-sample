@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo sample app</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<!-- APP CONTAINER -->
+<div id="app-container">
+    <!-- CALCULATOR -->
+    <div id="calc-main" style="display:inline-flex;flex-direction:column;">
+        <!-- DISPLAY: result, Equation -->
+        <div id="calc-display" style="display:flex;flex-direction:column;">
+            <!-- result -->
+            <div id="result-row" class="display-row" style="display:flex;flex-direction:row-reverse;">
+                <div id="result" style="align-self:center;">0</div>
+            </div>
+            <!-- Equation -->
+            <div id="expression-row" class="display-row" style="display:flex;flex-direction:row-reverse;">
+                <div id="expression" style="align-self:center;"></div>
+            </div>
+        </div>
+        <!-- KEYPAD -->
+        <div id="calc-kpad" style="display:flex;flex-direction:column;">
+            <!-- AC ( ) / -->
+            <div class="kpad-row" style="display:flex;flex-direction:row">
+                <button class="kpad-btn kpad-fn off-color" value="ac">AC</button>
+                <button class="kpad-btn off-color" value="(">(</button>
+                <button class="kpad-btn off-color" value=")">)</button>
+                <button class="kpad-btn off-color" value="/">/</button>
+            </div>
+            <!-- 7 8 9 * -->
+            <div class="kpad-row" style="display:flex;flex-direction:row">
+                <button class="kpad-btn" value="7">7</button>
+                <button class="kpad-btn" value="8">8</button>
+                <button class="kpad-btn" value="9">9</button>
+                <button class="kpad-btn off-color" value="*">*</button>
+            </div>
+            <!-- 4 5 6 - -->
+            <div class="kpad-row" style="display:flex;flex-direction:row">
+                <button class="kpad-btn" value="4">4</button>
+                <button class="kpad-btn" value="5">5</button>
+                <button class="kpad-btn" value="6">6</button>
+                <button class="kpad-btn off-color" value="-">-</button>
+            </div>
+            <!-- 1 2 3 + -->
+            <div class="kpad-row" style="display:flex;flex-direction:row">
+                <button class="kpad-btn" value="1">1</button>
+                <button class="kpad-btn" value="2">2</button>
+                <button class="kpad-btn" value="3">3</button>
+                <button class="kpad-btn off-color" value="+">+</button>
+            </div>
+            <!-- 0 . DEL -->
+            <div class="kpad-row" style="display:flex;flex-direction:row">
+                <button class="kpad-btn big" value="0">0</button>
+                <button class="kpad-btn" value=".">.</button>
+                <button class="kpad-btn kpad-fn off-color" value="del">DEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="app.js"></script>
+</html>

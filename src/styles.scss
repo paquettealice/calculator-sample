@@ -1,0 +1,68 @@
+$primary: #2a2a2a;
+$secondary: darkorange;
+$secondary-off: mediumaquamarine;
+$border-color: black;
+$border: 1px solid $border-color;
+$highlight: rgba(255, 255, 255, 0.15);
+
+$kpad-btn-width: 80px; // Everything scales from this value
+$kpad-btn-height: $kpad-btn-width;
+$kpad-btn-big-width: $kpad-btn-width*2;
+$kpad-btn-fsize: $kpad-btn-width/4;
+
+$kpad-result: $kpad-btn-width;
+
+$display-height: $kpad-btn-height/1.5;
+$display-fsize: $kpad-btn-fsize*1.5;
+
+#calc-main {
+  background-color: $primary;
+  border: $border;
+  font-family: monospace;
+  // Structured
+  #calc-display {
+    .display-row {
+      height: $display-height;
+      border: $border;
+      & > * {
+        font-family: inherit;
+        font-size: $display-fsize;
+        padding: 0 10px 0 10px;
+        border: none;
+        background-color: transparent;
+        text-align: right;
+      }
+      &#result-row {
+        color: $secondary;
+      }
+      &#expression-row {
+        color: $secondary-off;
+      }
+    }
+  }
+  #calc-kpad {
+    .kpad-btn {
+      font-family: inherit;
+      font-weight: inherit;
+      font-size: $kpad-btn-fsize;
+      width: $kpad-btn-width;
+      height: $kpad-btn-height;
+      background-color: transparent;
+      color: $secondary;
+      border: $border;
+      &.big {
+        width: $kpad-btn-big-width;
+      }
+      &.off-color {
+        color: $secondary-off;
+      }
+      &:hover {
+        background-color: $highlight;
+      }
+      &:focus {
+        outline: 0;
+      }
+    }
+  }
+}
+
