@@ -1,21 +1,39 @@
+/* Everything except borders scales from this value */
+.nodisplay {
+  display: none; }
+
 #calc-main {
   background-color: #2a2a2a;
   border: 1px solid black;
   font-family: monospace; }
   #calc-main #calc-display .display-row {
     height: 53.3333333333px;
-    border: 1px solid black; }
+    border: 1px solid black;
+    width: 318px;
+    overflow: scroll;
+    /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */ }
+    #calc-main #calc-display .display-row::-webkit-scrollbar {
+      width: 0;
+      height: 4px; }
     #calc-main #calc-display .display-row > * {
       font-family: inherit;
-      font-size: 30px;
       padding: 0 10px 0 10px;
-      border: none;
       background-color: transparent;
       text-align: right; }
+      #calc-main #calc-display .display-row > *.invalid {
+        color: gray; }
+      #calc-main #calc-display .display-row > *.animate {
+        font-size: 32px; }
     #calc-main #calc-display .display-row#result-row {
-      color: darkorange; }
+      color: darkorange;
+      font-size: 30px; }
+      #calc-main #calc-display .display-row#result-row::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 140, 0, 0.8); }
     #calc-main #calc-display .display-row#expression-row {
-      color: mediumaquamarine; }
+      color: mediumaquamarine;
+      font-size: 20px; }
+      #calc-main #calc-display .display-row#expression-row::-webkit-scrollbar-thumb {
+        background-color: rgba(102, 205, 170, 0.8); }
   #calc-main #calc-kpad .kpad-btn {
     font-family: inherit;
     font-weight: inherit;
@@ -33,5 +51,9 @@
       background-color: rgba(255, 255, 255, 0.15); }
     #calc-main #calc-kpad .kpad-btn:focus {
       outline: 0; }
+    #calc-main #calc-kpad .kpad-btn.animate {
+      background-color: rgba(255, 140, 0, 0.7); }
+      #calc-main #calc-kpad .kpad-btn.animate.off-color {
+        background-color: rgba(102, 205, 170, 0.7); }
 
 /*# sourceMappingURL=styles.css.map */

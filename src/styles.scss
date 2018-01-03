@@ -1,42 +1,78 @@
+// Colors
 $primary: #2a2a2a;
 $secondary: darkorange;
 $secondary-off: mediumaquamarine;
-$border-color: black;
-$border: 1px solid $border-color;
 $highlight: rgba(255, 255, 255, 0.15);
+$darken: rgba(0, 0, 0, 0.5);
 
-$kpad-btn-width: 80px; // Everything scales from this value
+// Borders
+$border-size: 1px;
+$border-color: black;
+$border: $border-size solid $border-color;
+
+// Dimensions
+$base-unit: 10px; /* Everything except borders scales from this value */
+$kpad-btn-width: $base-unit*8;
 $kpad-btn-height: $kpad-btn-width;
 $kpad-btn-big-width: $kpad-btn-width*2;
-$kpad-btn-fsize: $kpad-btn-width/4;
-
 $kpad-result: $kpad-btn-width;
-
 $display-height: $kpad-btn-height/1.5;
-$display-fsize: $kpad-btn-fsize*1.5;
+$display-width: $kpad-btn-width*4 - $border-size*2;
+$display-xpadding: $base-unit;
+
+// Dimensions
+$max-width: 350px;
+$max-height: $max-width*1.75;
+$keypad-width: $max-width;
+$keypad-height: $max-width;
+
+// Fonts
+$base-fsize: $kpad-btn-width/4;
+
+.nodisplay {
+  display: none;
+}
 
 #calc-main {
   background-color: $primary;
   border: $border;
   font-family: monospace;
-  // Structured
   #calc-display {
     .display-row {
       height: $display-height;
       border: $border;
+      width: $display-width;
+      overflow: scroll;
+      /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */
+      &::-webkit-scrollbar {
+        width: 0;
+        height: $base-unit*0.4;
+      }
       & > * {
         font-family: inherit;
-        font-size: $display-fsize;
-        padding: 0 10px 0 10px;
-        border: none;
+        padding: 0 $display-xpadding 0 $display-xpadding;
         background-color: transparent;
         text-align: right;
+        &.invalid {
+          color: gray;
+        }
+        &.animate {
+          font-size: $base-fsize*1.6;
+        }
       }
       &#result-row {
         color: $secondary;
+        font-size: $base-fsize*1.5;
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba($secondary, 0.8);
+        }
       }
       &#expression-row {
         color: $secondary-off;
+        font-size: $base-fsize;
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba($secondary-off, 0.8);
+        }
       }
     }
   }
@@ -44,7 +80,7 @@ $display-fsize: $kpad-btn-fsize*1.5;
     .kpad-btn {
       font-family: inherit;
       font-weight: inherit;
-      font-size: $kpad-btn-fsize;
+      font-size: $base-fsize;
       width: $kpad-btn-width;
       height: $kpad-btn-height;
       background-color: transparent;
@@ -61,6 +97,12 @@ $display-fsize: $kpad-btn-fsize*1.5;
       }
       &:focus {
         outline: 0;
+      }
+      &.animate {
+        background-color: rgba($secondary, 0.7);
+        &.off-color {
+          background-color: rgba($secondary-off, 0.7);
+        }
       }
     }
   }
