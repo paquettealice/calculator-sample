@@ -91,15 +91,12 @@
             startOrResetComposingTimer();
             animateElement(resultDiv, 100);
             expressionDiv.classList.remove('invalid');
-            // resultDiv.classList.remove('invalid');
         }
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
              * class is added in the callback to startOrResetComposingTimer. */
             startOrResetComposingTimer(function () {
-                // store.result.dispatch('update', 'NaN');
                 expressionDiv.classList.add('invalid');
-                // resultDiv.classList.add('invalid');
             });
         }
     }

@@ -20,12 +20,6 @@ $display-height: $kpad-btn-height/1.5;
 $display-width: $kpad-btn-width*4 - $border-size*2;
 $display-xpadding: $base-unit;
 
-// Dimensions
-$max-width: 350px;
-$max-height: $max-width*1.75;
-$keypad-width: $max-width;
-$keypad-height: $max-width;
-
 // Fonts
 $base-fsize: $kpad-btn-width/4;
 
@@ -43,8 +37,7 @@ $base-fsize: $kpad-btn-width/4;
       border: $border;
       width: $display-width;
       overflow: scroll;
-      /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */
-      &::-webkit-scrollbar {
+      &::-webkit-scrollbar { /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */
         width: 0;
         height: $base-unit*0.4;
       }
