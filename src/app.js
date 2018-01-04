@@ -2,10 +2,11 @@
  * Created by Alice Paquette on 12/27/2017
  */
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+var calculations_module_1 = require("./modules/calculations.module");
 (function () {
     /*** Variables ***/
     /* -- Modules ----------- */
-    var Calc = CalculationsModule;
     var KC = KeyCombinationsModule;
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
      * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
@@ -14,11 +15,10 @@
      * executed as a function or written to the expression as a character. */
     /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
     var keyBindings = {
-        '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',
-        '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
-        '.': '.', '(': '(', ')': ')', '+': '+', '-': '-',
-        '*': '*', '/': '/', 'Delete': 'delete', 'Backspace': 'delete',
-        'Control+Delete': 'allclear', 'Control+Backspace': 'allclear', 'Enter': 'wrap'
+        '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
+        '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
+        'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
+        'Enter': 'wrap'
     };
     /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
     var keypadButtons = {};
@@ -74,8 +74,8 @@
         var resultIsValid = true;
         if (e.detail !== '') {
             try {
-                result = Calc.resolveExpression(e.detail);
-                resultIsValid = Calc.isDecimalFormat(result);
+                result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
+                resultIsValid = calculations_module_1.CalculationsModule.isDecimalFormat(result);
             }
             catch (e) {
                 resultIsValid = false;

@@ -1,0 +1,22 @@
+{
+  "name": "calculator-sample",
+  "version": "1.0.0",
+  "description": "A simple calculator.",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paquettepy/calculator-sample.git"
+  },
+  "author": "Alice Paquette",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paquettepy/calculator-sample/issues"
+  },
+  "homepage": "https://github.com/paquettepy/calculator-sample#readme",
+  "devDependencies": {
+    "jest": "^22.0.4"
+  }
+}

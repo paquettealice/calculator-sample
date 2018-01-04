@@ -7,7 +7,7 @@
 
 'use strict';
 
-namespace CalculationsModule {
+export module CalculationsModule {
   /* Matches the content of any parentheses that contain no parentheses */
   const matchDeepestParentheses: RegExp = /\(([^()]+)\)/g;
   /* Matches the leftmost binary multiplication or division */
@@ -34,7 +34,7 @@ namespace CalculationsModule {
    * @returns {string} - The resolved mathematical expression.
    */
   export function resolveExpression(expression: string): string {
-    let flattenedExpression = resolveParentheses(convertParenthesisMultiplications(expression));
+    let flattenedExpression = resolveParentheses(expression);
     return resolveAdditionSubtraction(resolveMultiplicationDivision(flattenedExpression));
   }
 
@@ -49,10 +49,10 @@ namespace CalculationsModule {
    * @returns {string} - The flattened mathematical expression.
    */
   export function resolveParentheses(expression: string): string {
-    let newExpression;
+    let newExpression = convertParenthesisMultiplications(expression);
     let parenthesisFound = false;
 
-    newExpression = expression.replace(matchDeepestParentheses, (match, innerExpression) => {
+    newExpression = newExpression.replace(matchDeepestParentheses, (match, innerExpression) => {
       parenthesisFound = true;
       /* Resolve multiplication and division first, then addition and subtraction */
       return resolveAdditionSubtraction(resolveMultiplicationDivision(innerExpression));
@@ -109,7 +109,7 @@ namespace CalculationsModule {
     newExpression = newExpression.replace(matchAdditionSubtraction, (operation, operator) => {
       additionSubtractionFound = true;
 
-      return operator === '+' ? add(operation) : subtract(operation);
+      return sum(operation);
     });
 
     /* Call this function again if necessary */
@@ -172,54 +172,35 @@ namespace CalculationsModule {
 
   /* Basic Math Operations -------------- */
   /**
-   * Parses the provided operation for Additions '+', resolves it, then returns the result as a string.
-   * The provided string needs to be in the correct format, i.e. 'x+y+z...', or an exception will be thrown.
-   * Example: '5+3+2' -> '10'
+   * Parses an expression with Addition(s) and/or Subtraction(s) and returns the result as a string.
+   * Unlike Multiplying and Dividing, Adding and Subtracting have been combined into this function.
+   * This is done by replacing any Minus '-' by the equivalent '+-' and treating every operation like an Addition.
+   * Example: '5+3-2' -> '5+3+-2' -> '6'
    *
    * @param {string} operation - The operation to resolve.
    * @returns {string} - The result of the operation.
    * @throws An Error with the provided invalid string if the operation's result is NaN.
    */
-  export function add(operation: string): string {
-    const terms = operation.split('+');
+  export function sum(operation: string): string {
+    const op = operation.replace(/-/g, '+-');
+    /* We need to add a '0' at the beginning if the first character is an operator to
+     * make sure the split and subsequent parseFloat do not result in NaN.
+     * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseFloat--> NaN-5-3 = NaN
+     * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseFloat--> 0-5-3 = -8  */
+    const terms = (/^\+/.test(op) ? `0${op}` : op).split('+');
     let result = parseFloat(terms[0]);
 
     for (let term of terms.slice(1)) {
       result = result+parseFloat(term);
     }
 
-    if (isNaN(result)) { throw new Error(`(add) Invalid operation: '${operation}'`) }
+    if (isNaN(result)) throw new InvalidOperationError(operation);
     else { return result.toString() }
   }
 
   /**
-   * Parses the provided operation for Subtraction(s) '-', resolves it, then returns the result as a string.
-   * The provided string needs to be in the correct format, i.e. 'x-y-z...', or an exception will be thrown.
-   * Example: '-5-3-2' -> '-10'
-   *
-   * @param {string} operation - The operation to resolve.
-   * @returns {string} - The result of the operation.
-   * @throws An Error with the provided invalid string if the operation's result is NaN.
-   */
-  export function subtract(operation: string): string {
-    /* For subtraction, we need to add a '0' at the beginning if the first term is negative to
-     * make sure the split and subsequent parseFloat do not result in NaN.
-     * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseFloat--> NaN-5-3 = NaN
-     * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseFloat--> 0-5-3 = -8  */
-    const terms = (operation[0] === '-' ? `0${operation}` : operation).split('-');
-    let result = parseFloat(terms[0]);
-
-    for (let term of terms.slice(1)) {
-      result = result-parseFloat(term);
-    }
-
-    if (isNaN(result)) throw new Error(`(subtract) Invalid operation: '${operation}'`);
-    else return result.toString();
-  }
-
-  /**
-   * Parses the provided operation for Multiplication(s) '-', resolves it, then returns the result as a string.
-   * The provided string needs to be in the correct format, i.e. 'x*y*z...', or an exception will be thrown.
+   * Parses the provided operation for Multiplication(s) '*', resolves it, then returns the result as a string.
+   * The provided string needs to be in the correct format, i.e. 'x*y*z...'.
    * Example: '5*3*2' -> '30'
    *
    * @param {string} operation - The operation to resolve.
@@ -227,6 +208,7 @@ namespace CalculationsModule {
    * @throws An Error with the provided invalid string if the operation's result is NaN.
    */
   export function multiply(operation: string): string {
+    if (operation.indexOf('*') === -1) throw new InvalidOperationError(operation);
     const terms = operation.split('*');
     let result = parseFloat(terms[0]);
 
@@ -234,12 +216,12 @@ namespace CalculationsModule {
       result = result*parseFloat(term);
     }
 
-    if (isNaN(result)) throw new Error(`(multiply) Invalid operation: '${operation}'`);
+    if (isNaN(result)) throw new InvalidOperationError(operation);
     else return result.toString();
   }
 
   /**
-   * Parses the provided operation for Division(s) '-', resolves it, then returns the result as a string.
+   * Parses the provided operation for Division(s) '/', resolves it, then returns the result as a string.
    * The provided string needs to be in the correct format, i.e. 'x/y/z...', or an exception will be thrown.
    * Example: '10/2/2' -> '2.5'
    *
@@ -248,6 +230,7 @@ namespace CalculationsModule {
    * @throws An Error with the provided invalid string if the operation's result is NaN.
    */
   export function divide(operation: string): string {
+    if (operation.indexOf('/') === -1) throw new InvalidOperationError(operation);
     const terms = operation.split('/');
     let result = parseFloat(terms[0]);
 
@@ -255,7 +238,14 @@ namespace CalculationsModule {
       result = result/parseFloat(term);
     }
 
-    if (isNaN(result)) throw new Error(`(divide) Invalid operation: '${operation}'`);
+    if (isNaN(result)) throw new InvalidOperationError(operation);
     else return result.toString();
+  }
+
+  export class InvalidOperationError extends Error {
+    constructor(operation: string) {
+      super(`Invalid Operation: '${operation}'`);
+      this.name = 'InvalidOperationError';
+    }
   }
 }

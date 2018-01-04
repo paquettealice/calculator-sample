@@ -4,10 +4,11 @@
 
 'use strict';
 
+import { CalculationsModule as Calc } from './modules/calculations.module';
+
 (() => {
   /*** Variables ***/
   /* -- Modules ----------- */
-  const Calc = CalculationsModule;
   const KC = KeyCombinationsModule;
 
 
@@ -19,11 +20,10 @@
 
   /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
   const keyBindings = {
-    '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',
-    '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
-    '.': '.', '(': '(', ')': ')', '+': '+', '-': '-',
-    '*': '*', '/': '/', 'Delete': 'delete', 'Backspace': 'delete',
-    'Control+Delete': 'allclear', 'Control+Backspace': 'allclear', 'Enter': 'wrap'
+    '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
+    '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
+    'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
+    'Enter': 'wrap'
   };
   /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
   const keypadButtons = {};

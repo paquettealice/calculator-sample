@@ -5,6 +5,17 @@
  * addition '+', subtraction '-'.
  */
 'use strict';
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var CalculationsModule;
 (function (CalculationsModule) {
     /* Matches the content of any parentheses that contain no parentheses */
@@ -31,7 +42,7 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveExpression(expression) {
-        var flattenedExpression = resolveParentheses(convertParenthesisMultiplications(expression));
+        var flattenedExpression = resolveParentheses(expression);
         return resolveAdditionSubtraction(resolveMultiplicationDivision(flattenedExpression));
     }
     CalculationsModule.resolveExpression = resolveExpression;
@@ -46,9 +57,9 @@ var CalculationsModule;
      * @returns {string} - The flattened mathematical expression.
      */
     function resolveParentheses(expression) {
-        var newExpression;
+        var newExpression = convertParenthesisMultiplications(expression);
         var parenthesisFound = false;
-        newExpression = expression.replace(matchDeepestParentheses, function (match, innerExpression) {
+        newExpression = newExpression.replace(matchDeepestParentheses, function (match, innerExpression) {
             parenthesisFound = true;
             /* Resolve multiplication and division first, then addition and subtraction */
             return resolveAdditionSubtraction(resolveMultiplicationDivision(innerExpression));
@@ -97,7 +108,7 @@ var CalculationsModule;
         var additionSubtractionFound = false;
         newExpression = newExpression.replace(matchAdditionSubtraction, function (operation, operator) {
             additionSubtractionFound = true;
-            return operator === '+' ? add(operation) : subtract(operation);
+            return sum(operation);
         });
         /* Call this function again if necessary */
         if (additionSubtractionFound) {
@@ -154,58 +165,37 @@ var CalculationsModule;
     CalculationsModule.convertParenthesisMultiplications = convertParenthesisMultiplications;
     /* Basic Math Operations -------------- */
     /**
-     * Parses the provided operation for Additions '+', resolves it, then returns the result as a string.
-     * The provided string needs to be in the correct format, i.e. 'x+y+z...', or an exception will be thrown.
-     * Example: '5+3+2' -> '10'
+     * Parses an expression with Addition(s) and/or Subtraction(s) and returns the result as a string.
+     * Unlike Multiplying and Dividing, Adding and Subtracting have been combined into this function.
+     * This is done by replacing any Minus '-' by the equivalent '+-' and treating every operation like an Addition.
+     * Example: '5+3-2' -> '5+3+-2' -> '6'
      *
      * @param {string} operation - The operation to resolve.
      * @returns {string} - The result of the operation.
      * @throws An Error with the provided invalid string if the operation's result is NaN.
      */
-    function add(operation) {
-        var terms = operation.split('+');
+    function sum(operation) {
+        var op = operation.replace(/-/g, '+-');
+        /* We need to add a '0' at the beginning if the first character is an operator to
+         * make sure the split and subsequent parseFloat do not result in NaN.
+         * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseFloat--> NaN-5-3 = NaN
+         * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseFloat--> 0-5-3 = -8  */
+        var terms = (/^\+/.test(op) ? "0" + op : op).split('+');
         var result = parseFloat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
             var term = _a[_i];
             result = result + parseFloat(term);
         }
-        if (isNaN(result)) {
-            throw new Error("(add) Invalid operation: '" + operation + "'");
-        }
+        if (isNaN(result))
+            throw new InvalidOperationError(operation);
         else {
             return result.toString();
         }
     }
-    CalculationsModule.add = add;
+    CalculationsModule.sum = sum;
     /**
-     * Parses the provided operation for Subtraction(s) '-', resolves it, then returns the result as a string.
-     * The provided string needs to be in the correct format, i.e. 'x-y-z...', or an exception will be thrown.
-     * Example: '-5-3-2' -> '-10'
-     *
-     * @param {string} operation - The operation to resolve.
-     * @returns {string} - The result of the operation.
-     * @throws An Error with the provided invalid string if the operation's result is NaN.
-     */
-    function subtract(operation) {
-        /* For subtraction, we need to add a '0' at the beginning if the first term is negative to
-         * make sure the split and subsequent parseFloat do not result in NaN.
-         * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseFloat--> NaN-5-3 = NaN
-         * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseFloat--> 0-5-3 = -8  */
-        var terms = (operation[0] === '-' ? "0" + operation : operation).split('-');
-        var result = parseFloat(terms[0]);
-        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
-            var term = _a[_i];
-            result = result - parseFloat(term);
-        }
-        if (isNaN(result))
-            throw new Error("(subtract) Invalid operation: '" + operation + "'");
-        else
-            return result.toString();
-    }
-    CalculationsModule.subtract = subtract;
-    /**
-     * Parses the provided operation for Multiplication(s) '-', resolves it, then returns the result as a string.
-     * The provided string needs to be in the correct format, i.e. 'x*y*z...', or an exception will be thrown.
+     * Parses the provided operation for Multiplication(s) '*', resolves it, then returns the result as a string.
+     * The provided string needs to be in the correct format, i.e. 'x*y*z...'.
      * Example: '5*3*2' -> '30'
      *
      * @param {string} operation - The operation to resolve.
@@ -213,6 +203,8 @@ var CalculationsModule;
      * @throws An Error with the provided invalid string if the operation's result is NaN.
      */
     function multiply(operation) {
+        if (operation.indexOf('*') === -1)
+            throw new InvalidOperationError(operation);
         var terms = operation.split('*');
         var result = parseFloat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
@@ -220,13 +212,13 @@ var CalculationsModule;
             result = result * parseFloat(term);
         }
         if (isNaN(result))
-            throw new Error("(multiply) Invalid operation: '" + operation + "'");
+            throw new InvalidOperationError(operation);
         else
             return result.toString();
     }
     CalculationsModule.multiply = multiply;
     /**
-     * Parses the provided operation for Division(s) '-', resolves it, then returns the result as a string.
+     * Parses the provided operation for Division(s) '/', resolves it, then returns the result as a string.
      * The provided string needs to be in the correct format, i.e. 'x/y/z...', or an exception will be thrown.
      * Example: '10/2/2' -> '2.5'
      *
@@ -235,6 +227,8 @@ var CalculationsModule;
      * @throws An Error with the provided invalid string if the operation's result is NaN.
      */
     function divide(operation) {
+        if (operation.indexOf('/') === -1)
+            throw new InvalidOperationError(operation);
         var terms = operation.split('/');
         var result = parseFloat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
@@ -242,9 +236,19 @@ var CalculationsModule;
             result = result / parseFloat(term);
         }
         if (isNaN(result))
-            throw new Error("(divide) Invalid operation: '" + operation + "'");
+            throw new InvalidOperationError(operation);
         else
             return result.toString();
     }
     CalculationsModule.divide = divide;
-})(CalculationsModule || (CalculationsModule = {}));
+    var InvalidOperationError = /** @class */ (function (_super) {
+        __extends(InvalidOperationError, _super);
+        function InvalidOperationError(operation) {
+            var _this = _super.call(this, "Invalid Operation: '" + operation + "'") || this;
+            _this.name = 'InvalidOperationError';
+            return _this;
+        }
+        return InvalidOperationError;
+    }(Error));
+    CalculationsModule.InvalidOperationError = InvalidOperationError;
+})(CalculationsModule = exports.CalculationsModule || (exports.CalculationsModule = {}));
