@@ -28,8 +28,8 @@ var CalculationsModule;
     var matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
     var matchParenthesisMultiplications = /([\d)])\(/g;
-    /* Matches a valid result (a resolved expression) */
-    var matchValidResult = /^-?\d+(.\d+)?$/;
+    /* Matches a string in the numeric format F8.2 or Infinity */
+    var matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
     /* Resolvers -------------
      * These functions take basic mathematical expressions and resolve them by following the order of operations.
      * Valid operations: parentheses '()', multiplication '*', division '/', addition '+', and subtraction '-'.
@@ -98,6 +98,8 @@ var CalculationsModule;
      * 3. Addition and Subtraction
      * Resolves the leftmost binary addition or subtraction. This function calls itself until no valid operation
      * remains.
+     * Note: This will resolve any addition or subtraction regardless of other operators (multiplication, division, or
+     * otherwise) without following the order of operations.
      * Example: '-5-3+2-4' -> '-8+2-4' -> '-6-4' -> '-10'
      *
      * @param {string} expression - The mathematical expression to resolve.
@@ -121,6 +123,7 @@ var CalculationsModule;
     /**
      * Tests whether the provided string matches the F8.2 numeric format, '[-]123.456'. Its criteria are less forgiving
      * than parseFloat, as superfluous operators and omitted zeros will lead to a failed test.
+     * Note: 'Infinity' will return true.
      * Valid strings: '35', '-35', '0.35', '-0.35', '0', '-0'
      * Invalid strings: '--35', '35+', '+35', '35.', '.35'
      * @see http://www.gnu.org/software/pspp/manual/html_node/Basic-Numeric-Formats.html
@@ -129,9 +132,25 @@ var CalculationsModule;
      * @returns {boolean} - True if the string matches the F8.2 numeric format, '[-]123.456'.
      */
     function isDecimalFormat(str) {
-        return matchValidResult.test(str);
+        return matchDecimalFormat.test(str);
     }
     CalculationsModule.isDecimalFormat = isDecimalFormat;
+    /**
+     * Tests whether the provided string matches the F8.2 numeric format, '[-]123.456', and if so, returns it as a float.
+     * Its criteria are less forgiving than parseFloat, as superfluous operators and omitted zeros will lead to a
+     * failed test.
+     * Note: 'Infinity' will return Infinity.
+     * Valid strings: '35', '-35', '0.35', '-0.35', '0', '-0'
+     * Invalid strings: '--35', '35+', '+35', '35.', '.35'
+     * @see http://www.gnu.org/software/pspp/manual/html_node/Basic-Numeric-Formats.html
+     *
+     * @param {string} str - The string to parse.
+     * @returns {number} - A float if the string passes the test, NaN otherwise.
+     */
+    function parseDecimalFormat(str) {
+        return isDecimalFormat(str) ? parseFloat(str) : NaN;
+    }
+    CalculationsModule.parseDecimalFormat = parseDecimalFormat;
     /**
      * Replaces two or more consecutive Plus '+' and Minus '-' signs by the appropriate operator based on the number of
      * Minus (-) signs, trims leading Plus '+' signs if necessary, then returns the resulting string.
@@ -163,6 +182,19 @@ var CalculationsModule;
         });
     }
     CalculationsModule.convertParenthesisMultiplications = convertParenthesisMultiplications;
+    /**
+     * @class
+     */
+    var InvalidOperationError = /** @class */ (function (_super) {
+        __extends(InvalidOperationError, _super);
+        function InvalidOperationError(operation) {
+            var _this = _super.call(this, operation) || this;
+            _this.name = 'InvalidOperationError';
+            return _this;
+        }
+        return InvalidOperationError;
+    }(Error));
+    CalculationsModule.InvalidOperationError = InvalidOperationError;
     /* Basic Math Operations -------------- */
     /**
      * Parses an expression with Addition(s) and/or Subtraction(s) and returns the result as a string.
@@ -178,13 +210,13 @@ var CalculationsModule;
         var op = operation.replace(/-/g, '+-');
         /* We need to add a '0' at the beginning if the first character is an operator to
          * make sure the split and subsequent parseFloat do not result in NaN.
-         * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseFloat--> NaN-5-3 = NaN
-         * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseFloat--> 0-5-3 = -8  */
+         * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseDecimalFormat--> NaN-5-3 = NaN
+         * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseDecimalFormat--> 0-5-3 = -8  */
         var terms = (/^\+/.test(op) ? "0" + op : op).split('+');
-        var result = parseFloat(terms[0]);
+        var result = parseDecimalFormat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
             var term = _a[_i];
-            result = result + parseFloat(term);
+            result = result + parseDecimalFormat(term);
         }
         if (isNaN(result))
             throw new InvalidOperationError(operation);
@@ -206,10 +238,10 @@ var CalculationsModule;
         if (operation.indexOf('*') === -1)
             throw new InvalidOperationError(operation);
         var terms = operation.split('*');
-        var result = parseFloat(terms[0]);
+        var result = parseDecimalFormat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
             var term = _a[_i];
-            result = result * parseFloat(term);
+            result = result * parseDecimalFormat(term);
         }
         if (isNaN(result))
             throw new InvalidOperationError(operation);
@@ -230,10 +262,10 @@ var CalculationsModule;
         if (operation.indexOf('/') === -1)
             throw new InvalidOperationError(operation);
         var terms = operation.split('/');
-        var result = parseFloat(terms[0]);
+        var result = parseDecimalFormat(terms[0]);
         for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
             var term = _a[_i];
-            result = result / parseFloat(term);
+            result = result / parseDecimalFormat(term);
         }
         if (isNaN(result))
             throw new InvalidOperationError(operation);
@@ -241,14 +273,4 @@ var CalculationsModule;
             return result.toString();
     }
     CalculationsModule.divide = divide;
-    var InvalidOperationError = /** @class */ (function (_super) {
-        __extends(InvalidOperationError, _super);
-        function InvalidOperationError(operation) {
-            var _this = _super.call(this, "Invalid Operation: '" + operation + "'") || this;
-            _this.name = 'InvalidOperationError';
-            return _this;
-        }
-        return InvalidOperationError;
-    }(Error));
-    CalculationsModule.InvalidOperationError = InvalidOperationError;
 })(CalculationsModule = exports.CalculationsModule || (exports.CalculationsModule = {}));
