@@ -2,40 +2,39 @@
  * Created by Alice Paquette on 12/27/2017
  */
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-var calculations_module_1 = require("./modules/calculations.module");
-(function () {
+/* -- Modules ----------- */
+import { CalculationsModule as Calc } from './modules/calculations.module';
+import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
+(() => {
     /*** Variables ***/
-    /* -- Modules ----------- */
-    var KC = KeyCombinationsModule;
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
      * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
      * a value (via 'keyBindings'); that value is then associated to a button (via keypadButtons),
      * which is then clicked programmatically. Finally, the value of the clicked button is evaluated and either
      * executed as a function or written to the expression as a character. */
     /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
-    var keyBindings = {
+    const keyBindings = {
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
         '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
         'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
         'Enter': 'wrap'
     };
     /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
-    var keypadButtons = {};
-    document.querySelectorAll('button.kpad-btn').forEach(function (button) {
+    const keypadButtons = {};
+    document.querySelectorAll('button.kpad-btn').forEach(button => {
         keypadButtons[button.value] = button;
     });
     /* Calculator display functionality ------------ */
-    var resultDiv = document.getElementById('result');
-    var expressionDiv = document.getElementById('expression');
-    var composing = false; // True if there was a user input in the last second
-    var timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
+    const resultDiv = document.getElementById('result');
+    const expressionDiv = document.getElementById('expression');
+    let composing = false; // True if there was a user input in the last second
+    let timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
     /* -- A tiny version of a redux store ------------ */
-    var store = {
+    const store = {
         expression: {
-            dispatch: function (action, payload) {
-                var oldState = expressionDiv.textContent || '';
-                var newState = oldState;
+            dispatch: (action, payload) => {
+                const oldState = expressionDiv.textContent || '';
+                let newState = oldState;
                 switch (action) {
                     case 'write':
                         newState = oldState + payload;
@@ -45,7 +44,7 @@ var calculations_module_1 = require("./modules/calculations.module");
                         break;
                     case 'wrap':
                         if (oldState !== '') {
-                            newState = "(" + oldState + ")";
+                            newState = `(${oldState})`;
                         }
                         break;
                     case 'allclear':
@@ -57,7 +56,7 @@ var calculations_module_1 = require("./modules/calculations.module");
             }
         },
         result: {
-            dispatch: function (action, payload) {
+            dispatch: (action, payload) => {
                 switch (action) {
                     case 'update':
                         resultDiv.textContent = payload;
@@ -70,12 +69,12 @@ var calculations_module_1 = require("./modules/calculations.module");
     /* -- Event Handlers --------- */
     /* Expression changes */
     function expressionChanged(e) {
-        var result;
-        var resultIsValid = true;
+        let result;
+        let resultIsValid = true;
         if (e.detail !== '') {
             try {
-                result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
-                resultIsValid = calculations_module_1.CalculationsModule.isDecimalFormat(result);
+                result = Calc.resolveExpression(e.detail);
+                resultIsValid = Calc.isDecimalFormat(result);
             }
             catch (e) {
                 resultIsValid = false;
@@ -95,7 +94,7 @@ var calculations_module_1 = require("./modules/calculations.module");
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
              * class is added in the callback to startOrResetComposingTimer. */
-            startOrResetComposingTimer(function () {
+            startOrResetComposingTimer(() => {
                 expressionDiv.classList.add('invalid');
             });
         }
@@ -122,10 +121,9 @@ var calculations_module_1 = require("./modules/calculations.module");
     }
     /* -- Animation and styling ---------- **/
     /* Adds the class 'highlight' to a button for a user-defined amount of time (in ms) for the purposes of animation. */
-    function animateElement(el, timeout) {
-        if (timeout === void 0) { timeout = 200; }
+    function animateElement(el, timeout = 200) {
         el.classList.add('animate');
-        window.setTimeout(function () {
+        window.setTimeout(() => {
             el.classList.remove('animate');
         }, timeout);
     }
@@ -133,7 +131,7 @@ var calculations_module_1 = require("./modules/calculations.module");
     function startOrResetComposingTimer(callback) {
         clearTimeout(timeoutId);
         composing = true;
-        timeoutId = window.setTimeout(function () {
+        timeoutId = window.setTimeout(() => {
             composing = false;
             if (callback)
                 callback();
@@ -144,12 +142,12 @@ var calculations_module_1 = require("./modules/calculations.module");
     /* Expression changes */
     expressionDiv.addEventListener('change', expressionChanged);
     /* Keypad button clicks */
-    Object.keys(keypadButtons).forEach(function (k) {
+    Object.keys(keypadButtons).forEach(k => {
         keypadButtons[k].addEventListener('click', keypadButtonClicked);
     });
     /* Keydown */
-    document.addEventListener('keydown', function (e) {
-        var keybindFunction = keyBindings[KC.convertToKeyCombination(e)];
+    document.addEventListener('keydown', (e) => {
+        const keybindFunction = keyBindings[KC.convertToKeyCombination(e)];
         if (keybindFunction) {
             keypadButtons[keybindFunction].click();
         }

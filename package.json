@@ -4,7 +4,8 @@
   "description": "A simple calculator.",
   "main": "index.html",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose",
+    "start": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/paquettepy/calculator-sample#readme",
   "devDependencies": {
-    "jest": "^22.0.4"
+    "jest": "^22.0.4",
+    "webpack": "^3.10.0"
   }
 }

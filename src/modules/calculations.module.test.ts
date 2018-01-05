@@ -7,7 +7,7 @@ test('resolveExpression "48/2(9+3)" should equal "288"', () => {
 test('resolveExpression "(2+5)*(2/0)" should equal "7*Infinity"', () => {
   expect(C.resolveExpression('(2+5)*(2/0)')).toBe('7*Infinity');
 });
-test('resolveExpression "(1-1)/0" should throw InvalidOperationError', () => {
+test('resolveExpression "(1-1)/0" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.resolveExpression('(1-1)/0'));
   })
@@ -166,22 +166,22 @@ test('sum "1" should equal "1"', () => {
 test('sum "0-1" should equal "-1"', () => {
   expect(C.sum('0-1')).toBe('-1')
 });
-test('sum "--1+1" should throw InvalidOperationError', () => {
+test('sum "--1+1" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.sum('--1+1'));
   }).toThrow(/Invalid Operation/);
 });
-test('sum "--1" should throw InvalidOperationError', () => {
+test('sum "--1" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.sum('--1'));
   }).toThrow(/Invalid Operation/);
 });
-test('sum "++1" should throw InvalidOperationError', () => {
+test('sum "++1" should throw "Invalid Operation"', () => {
   expect(() => {
-    console.log(C.sum('++1'));
+    C.sum('++1');
   }).toThrow(/Invalid Operation/);
 });
-test('sum "2*1+1" should throw InvalidOperationError', () => {
+test('sum "2*1+1" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.sum('2*1+1'));
   }).toThrow(/Invalid Operation/);
@@ -212,18 +212,18 @@ test('divide "1/0" should equal "Infinity"', () => {
 test('divide "0/1" should equal "0"', () => {
   expect(C.divide('0/1')).toBe('0');
 });
-test('divide "0/0" should throw InvalidOperationError', () => {
+test('divide "0/0" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.divide('0/0'));
   }).toThrow(/Invalid Operation/);
 });
-test('divide "0/-0" should throw InvalidOperationError', () => {
+test('divide "0/-0" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.divide('0/-0'));
   }).toThrow(/Invalid Operation/);
 });
-test('divide "-0/0" should throw InvalidOperationError', () => {
+test('divide "-0/0" should throw "Invalid Operation"', () => {
   expect(() => {
     console.log(C.divide('-0/0'));
-  }).toThrow(/Invalid Operation/);
+  }).toThrowError(Error);
 });

@@ -52,8 +52,8 @@
     #calc-main #calc-kpad .kpad-btn:focus {
       outline: 0; }
     #calc-main #calc-kpad .kpad-btn.animate {
-      background-color: rgba(255, 140, 0, 0.7); }
+      background-color: rgba(255, 140, 0, 0.8); }
       #calc-main #calc-kpad .kpad-btn.animate.off-color {
-        background-color: rgba(102, 205, 170, 0.7); }
+        background-color: rgba(102, 205, 170, 0.8); }
 
 /*# sourceMappingURL=styles.css.map */

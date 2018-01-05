@@ -189,13 +189,12 @@ export module CalculationsModule {
   }
 
   /**
-   * @class
+   * Returns an error with a customized message for invalid operations.
+   * @param {string} operation - The invalid operation.
+   * @returns {Error} - The error.
    */
-  export class InvalidOperationError extends Error {
-    constructor(operation: string) {
-      super(operation);
-      this.name = 'InvalidOperationError';
-    }
+  function InvalidOperationError(operation: string): Error {
+    return new Error(`Invalid Operation: '${operation}'`)
   }
 
 
@@ -223,7 +222,7 @@ export module CalculationsModule {
       result = result+parseDecimalFormat(term);
     }
 
-    if (isNaN(result)) throw new InvalidOperationError(operation);
+    if (isNaN(result)) throw InvalidOperationError(operation);
     else { return result.toString() }
   }
 
@@ -237,7 +236,7 @@ export module CalculationsModule {
    * @throws An Error with the provided invalid string if the operation's result is NaN.
    */
   export function multiply(operation: string): string {
-    if (operation.indexOf('*') === -1) throw new InvalidOperationError(operation);
+    if (operation.indexOf('*') === -1) throw InvalidOperationError(operation);
     const terms = operation.split('*');
     let result = parseDecimalFormat(terms[0]);
 
@@ -245,7 +244,7 @@ export module CalculationsModule {
       result = result*parseDecimalFormat(term);
     }
 
-    if (isNaN(result)) throw new InvalidOperationError(operation);
+    if (isNaN(result)) throw InvalidOperationError(operation);
     else return result.toString();
   }
 
@@ -259,7 +258,7 @@ export module CalculationsModule {
    * @throws An Error with the provided invalid string if the operation's result is NaN.
    */
   export function divide(operation: string): string {
-    if (operation.indexOf('/') === -1) throw new InvalidOperationError(operation);
+    if (operation.indexOf('/') === -1) throw InvalidOperationError(operation);
     const terms = operation.split('/');
     let result = parseDecimalFormat(terms[0]);
 
@@ -267,7 +266,7 @@ export module CalculationsModule {
       result = result/parseDecimalFormat(term);
     }
 
-    if (isNaN(result)) throw new InvalidOperationError(operation);
+    if (isNaN(result)) throw InvalidOperationError(operation);
     else return result.toString();
   }
 }

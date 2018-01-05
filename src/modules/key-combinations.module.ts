@@ -5,23 +5,18 @@
 
 'use strict';
 
-namespace KeyCombinationsModule {
+export module KeyCombinationsModule {
 
   /**
    * @constant
    * @type {string[]}
-   * These are keys that A) are not modifiers, and B) do not output a different character (if they output
-   * one at all) when combined with Shift. This means Shift can be included when converting to a keybind,
-   * e.g. Shift + Enter, while most characters--such as digits, which become symbols--need to have Shift filtered out.
-   *
-   * For example, Shift + $ would make no sense as the dollar sign ($) is achieved by pressing Shift in the first place.
-   * This also helps with localization and different keyboard layouts since keybinds in this module are based on
-   * the output-based KeyboardEvent.key, not KeyboardEvent.code. The latter represents a physical key on the keyboard,
-   * and so is unmodified by layout or locale.
-   * @summary Represents KeyboardEvent.keys whose output is not modified by Shift.
+   * These are KeyboardEvent.keys (not KeyboardEvent.code) that A) are not modifiers, and B) do not output a character
+   * when modified by Shift. This is relevant for localization and differing keyboard layouts. For example, if a
+   * function depends on the user inputting '$', 'Shift + $' would make no sense as '$' might be produced through a
+   * different key combination in a different keyboard layout or locale.
    * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
    */
-  const shiftIndependentKeys = [
+  const nonCharacterKeys = [
     'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Backspace', 'Delete',
     'Enter', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'Space', 'CapsLock', 'Tab'
   ];
@@ -39,7 +34,7 @@ namespace KeyCombinationsModule {
 
     if (!isModifier(e)) {
       // Remove shift if the KeyboardEvent.key is shift dependent
-      if (e.shiftKey && !shiftIndependentKeys.includes(e.key)) {
+      if (e.shiftKey && !nonCharacterKeys.includes(e.key)) {
         mods.splice(mods.indexOf('Shift'));
       }
       payload = `${mods.join('+')}${mods.length > 0 ? '+' : ''}${e.key}`;

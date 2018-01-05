@@ -92,9 +92,9 @@ $base-fsize: $kpad-btn-width/4;
         outline: 0;
       }
       &.animate {
-        background-color: rgba($secondary, 0.7);
+        background-color: rgba($secondary, 0.8);
         &.off-color {
-          background-color: rgba($secondary-off, 0.7);
+          background-color: rgba($secondary-off, 0.8);
         }
       }
     }

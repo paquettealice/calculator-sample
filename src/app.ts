@@ -4,14 +4,12 @@
 
 'use strict';
 
+/* -- Modules ----------- */
 import { CalculationsModule as Calc } from './modules/calculations.module';
+import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
 
 (() => {
   /*** Variables ***/
-  /* -- Modules ----------- */
-  const KC = KeyCombinationsModule;
-
-
   /* -- Keyboard Shortcuts and Keypad Functionality -------------
    * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
    * a value (via 'keyBindings'); that value is then associated to a button (via keypadButtons),
@@ -26,14 +24,14 @@ import { CalculationsModule as Calc } from './modules/calculations.module';
     'Enter': 'wrap'
   };
   /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
-  const keypadButtons = {};
+  const keypadButtons: any = {};
   document.querySelectorAll('button.kpad-btn').forEach(button => {
-    keypadButtons[button.value] = button;
+    keypadButtons[(button as HTMLInputElement).value] = button;
   });
 
   /* Calculator display functionality ------------ */
-  const resultDiv = document.getElementById('result');
-  const expressionDiv = document.getElementById('expression');
+  const resultDiv: HTMLElement = document.getElementById('result');
+  const expressionDiv: HTMLElement = document.getElementById('expression');
   let composing: boolean = false;  // True if there was a user input in the last second
   let timeoutId: number;  // The ID of the current Window.timeout used to determine if the user is composing
 
