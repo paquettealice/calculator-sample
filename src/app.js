@@ -2,10 +2,11 @@
  * Created by Alice Paquette on 12/27/2017
  */
 'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
 /* -- Modules ----------- */
-import { CalculationsModule as Calc } from './modules/calculations.module';
-import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
-(() => {
+var calculations_module_1 = require("./modules/calculations.module");
+var key_combinations_module_1 = require("./modules/key-combinations.module");
+(function () {
     /*** Variables ***/
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
      * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
@@ -13,28 +14,28 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
      * which is then clicked programmatically. Finally, the value of the clicked button is evaluated and either
      * executed as a function or written to the expression as a character. */
     /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
-    const keyBindings = {
+    var keyBindings = {
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
         '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
         'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
         'Enter': 'wrap'
     };
     /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
-    const keypadButtons = {};
-    document.querySelectorAll('button.kpad-btn').forEach(button => {
+    var keypadButtons = {};
+    document.querySelectorAll('button.kpad-btn').forEach(function (button) {
         keypadButtons[button.value] = button;
     });
     /* Calculator display functionality ------------ */
-    const resultDiv = document.getElementById('result');
-    const expressionDiv = document.getElementById('expression');
-    let composing = false; // True if there was a user input in the last second
-    let timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
+    var resultDiv = document.getElementById('result');
+    var expressionDiv = document.getElementById('expression');
+    var composing = false; // True if there was a user input in the last second
+    var timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
     /* -- A tiny version of a redux store ------------ */
-    const store = {
+    var store = {
         expression: {
-            dispatch: (action, payload) => {
-                const oldState = expressionDiv.textContent || '';
-                let newState = oldState;
+            dispatch: function (action, payload) {
+                var oldState = expressionDiv.textContent || '';
+                var newState = oldState;
                 switch (action) {
                     case 'write':
                         newState = oldState + payload;
@@ -44,7 +45,7 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
                         break;
                     case 'wrap':
                         if (oldState !== '') {
-                            newState = `(${oldState})`;
+                            newState = "(" + oldState + ")";
                         }
                         break;
                     case 'allclear':
@@ -56,7 +57,7 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
             }
         },
         result: {
-            dispatch: (action, payload) => {
+            dispatch: function (action, payload) {
                 switch (action) {
                     case 'update':
                         resultDiv.textContent = payload;
@@ -69,12 +70,12 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
     /* -- Event Handlers --------- */
     /* Expression changes */
     function expressionChanged(e) {
-        let result;
-        let resultIsValid = true;
+        var result;
+        var resultIsValid = true;
         if (e.detail !== '') {
             try {
-                result = Calc.resolveExpression(e.detail);
-                resultIsValid = Calc.isDecimalFormat(result);
+                result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
+                resultIsValid = calculations_module_1.CalculationsModule.isDecimalFormat(result);
             }
             catch (e) {
                 resultIsValid = false;
@@ -94,7 +95,7 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
              * class is added in the callback to startOrResetComposingTimer. */
-            startOrResetComposingTimer(() => {
+            startOrResetComposingTimer(function () {
                 expressionDiv.classList.add('invalid');
             });
         }
@@ -121,9 +122,10 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
     }
     /* -- Animation and styling ---------- **/
     /* Adds the class 'highlight' to a button for a user-defined amount of time (in ms) for the purposes of animation. */
-    function animateElement(el, timeout = 200) {
+    function animateElement(el, timeout) {
+        if (timeout === void 0) { timeout = 200; }
         el.classList.add('animate');
-        window.setTimeout(() => {
+        window.setTimeout(function () {
             el.classList.remove('animate');
         }, timeout);
     }
@@ -131,7 +133,7 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
     function startOrResetComposingTimer(callback) {
         clearTimeout(timeoutId);
         composing = true;
-        timeoutId = window.setTimeout(() => {
+        timeoutId = window.setTimeout(function () {
             composing = false;
             if (callback)
                 callback();
@@ -142,12 +144,12 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
     /* Expression changes */
     expressionDiv.addEventListener('change', expressionChanged);
     /* Keypad button clicks */
-    Object.keys(keypadButtons).forEach(k => {
+    Object.keys(keypadButtons).forEach(function (k) {
         keypadButtons[k].addEventListener('click', keypadButtonClicked);
     });
     /* Keydown */
-    document.addEventListener('keydown', (e) => {
-        const keybindFunction = keyBindings[KC.convertToKeyCombination(e)];
+    document.addEventListener('keydown', function (e) {
+        var keybindFunction = keyBindings[key_combinations_module_1.KeyCombinationsModule.convertToKeyCombination(e)];
         if (keybindFunction) {
             keypadButtons[keybindFunction].click();
         }

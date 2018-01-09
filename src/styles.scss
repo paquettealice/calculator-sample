@@ -1,16 +1,16 @@
-// Colors
+/* Colors */
 $primary: #2a2a2a;
 $secondary: darkorange;
 $secondary-off: mediumaquamarine;
 $highlight: rgba(255, 255, 255, 0.15);
 $darken: rgba(0, 0, 0, 0.5);
 
-// Borders
+/* Borders */
 $border-size: 1px;
 $border-color: black;
 $border: $border-size solid $border-color;
 
-// Dimensions
+/* Dimensions */
 $base-unit: 10px; /* Everything except borders scales from this value */
 $kpad-btn-width: $base-unit*8;
 $kpad-btn-height: $kpad-btn-width;
@@ -20,84 +20,101 @@ $display-height: $kpad-btn-height/1.5;
 $display-width: $kpad-btn-width*4 - $border-size*2;
 $display-xpadding: $base-unit;
 
-// Fonts
+/* Fonts */
 $base-fsize: $kpad-btn-width/4;
 
+/* General */
 .nodisplay {
   display: none;
 }
+.desc-q {
+  font-weight: bold;
+}
+table {
+  th, td {
+    text-align: center;
+    border: $border;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
 
-#calc-main {
-  background-color: $primary;
-  border: $border;
+/* Specific */
+#app-container {
   font-family: monospace;
-  #calc-display {
-    .display-row {
-      height: $display-height;
-      border: $border;
-      width: $display-width;
-      overflow: scroll;
-      &::-webkit-scrollbar { /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */
-        width: 0;
-        height: $base-unit*0.4;
-      }
-      & > * {
-        font-family: inherit;
-        padding: 0 $display-xpadding 0 $display-xpadding;
-        background-color: transparent;
-        text-align: right;
-        &.invalid {
-          color: gray;
+  #calc-main {
+    margin-right: 50px;
+    background-color: $primary;
+    border: $border;
+    #calc-display {
+      .display-row {
+        height: $display-height;
+        border: $border;
+        width: $display-width;
+        overflow: scroll;
+        &::-webkit-scrollbar { /* Scrollbar fix for MacOS - scrollbar doesn't show up when not in use (even on hover) */
+          width: 0;
+          height: $base-unit*0.4;
         }
-        &.animate {
-          font-size: $base-fsize*1.6;
+        & > * {
+          font-family: inherit;
+          padding: 0 $display-xpadding 0 $display-xpadding;
+          background-color: transparent;
+          text-align: right;
+          &.invalid {
+            color: gray;
+          }
+          &.animate {
+            font-size: $base-fsize*1.6;
+          }
         }
-      }
-      &#result-row {
-        color: $secondary;
-        font-size: $base-fsize*1.5;
-        &::-webkit-scrollbar-thumb {
-          background-color: rgba($secondary, 0.8);
+        &#result-row {
+          color: $secondary;
+          font-size: $base-fsize*1.5;
+          &::-webkit-scrollbar-thumb {
+            background-color: rgba($secondary, 0.8);
+          }
         }
-      }
-      &#expression-row {
-        color: $secondary-off;
-        font-size: $base-fsize;
-        &::-webkit-scrollbar-thumb {
-          background-color: rgba($secondary-off, 0.8);
+        &#expression-row {
+          color: $secondary-off;
+          font-size: $base-fsize;
+          &::-webkit-scrollbar-thumb {
+            background-color: rgba($secondary-off, 0.8);
+          }
         }
       }
     }
-  }
-  #calc-kpad {
-    .kpad-btn {
-      font-family: inherit;
-      font-weight: inherit;
-      font-size: $base-fsize;
-      width: $kpad-btn-width;
-      height: $kpad-btn-height;
-      background-color: transparent;
-      color: $secondary;
-      border: $border;
-      &.big {
-        width: $kpad-btn-big-width;
-      }
-      &.off-color {
-        color: $secondary-off;
-      }
-      &:hover {
-        background-color: $highlight;
-      }
-      &:focus {
-        outline: 0;
-      }
-      &.animate {
-        background-color: rgba($secondary, 0.8);
+    #calc-kpad {
+      .kpad-btn {
+        font-family: inherit;
+        font-weight: inherit;
+        font-size: $base-fsize;
+        width: $kpad-btn-width;
+        height: $kpad-btn-height;
+        background-color: transparent;
+        color: $secondary;
+        border: $border;
+        &.big {
+          width: $kpad-btn-big-width;
+        }
         &.off-color {
-          background-color: rgba($secondary-off, 0.8);
+          color: $secondary-off;
+        }
+        &:hover {
+          background-color: $highlight;
+        }
+        &:focus {
+          outline: 0;
+        }
+        &.animate {
+          background-color: rgba($secondary, 0.8);
+          &.off-color {
+            background-color: rgba($secondary-off, 0.8);
+          }
         }
       }
     }
   }
 }
+
 

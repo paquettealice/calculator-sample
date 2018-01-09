@@ -9,11 +9,11 @@
 </head>
 <body>
     <!-- APP CONTAINER -->
-    <div id="app-container">
+    <div id="app-container" style="display:flex;">
         <!-- CALCULATOR -->
         <div id="calc-main" style="display:inline-flex;flex-direction:column;">
             <!-- DISPLAY: Result, Equation -->
-            <div id="calc-display" style="display:flex;flex-direction:column;flex-basis:25%">
+            <div id="calc-display" style="display:flex;flex-direction:column;">
                 <!-- Result -->
                 <div id="result-row" class="display-row" style="display:flex;flex-direction:row-reverse;">
                     <div id="result" style="align-self:center;">-</div>
@@ -65,6 +65,83 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- DESCRIPTION -->
+        <p>
+        <div style="display:flex;flex-direction:column;">
+            <!-- What is it? -->
+            <div>
+                <span class="desc-q">What is it?</span>
+                <span>A basic calculator.</span>
+            </div>
+            <!-- How do I use it? -->
+            <div>
+                <span class="desc-q">How do I use it?</span>
+                <span>Click the buttons, or... <span style="font-style:italic;">use the keyboard shortcuts!</span></span>
+            </div>
+            <!-- Keyboard Shortcuts -->
+            <br/>
+            <div>
+                <table style="display:flex;flex-direction:column;">
+                    <tr>
+                        <th>Shortcut</th>
+                        <th>Function</th>
+                    </tr>
+                    <tr>
+                        <td>0-9</td>
+                        <td>Numbers 0 through 9</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>Multiplication</td>
+                    </tr>
+                    <tr>
+                        <td>/</td>
+                        <td>Division</td>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td>Addition</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>Subtraction</td>
+                    </tr>
+                    <tr>
+                        <td>.</td>
+                        <td>Decimal Point</td>
+                    </tr>
+                    <tr>
+                        <td>()</td>
+                        <td>Parentheses</td>
+                    </tr>
+                    <tr>
+                        <td>Enter</td>
+                        <td>Wrap in parentheses</td>
+                    </tr>
+                    <tr>
+                        <td>Delete</td>
+                        <td>Undo/Delete</td>
+                    </tr>
+                    <tr>
+                        <td>Control+Delete</td>
+                        <td>All Clear</td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <!-- ABOUT -->
+            <div>
+                <div><span class="desc-q">Author</span>: Alice Paquette</div>
+                <div><span class="desc-q">Email</span>: paquette.py@gmail.com</div>
+                <div>
+                    <span class="desc-q">Source</span>:
+                    <a href="https://github.com/paquettepy/calculator-sample" target="_blank">https://github.com/paquettepy/calculator-sample</a>
+                </div>
+            </div>
+        </div>
+        </p>
     </div>
 </body>
 </html>

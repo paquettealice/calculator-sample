@@ -1,59 +1,76 @@
+/* Colors */
+/* Borders */
+/* Dimensions */
 /* Everything except borders scales from this value */
+/* Fonts */
+/* General */
 .nodisplay {
   display: none; }
 
-#calc-main {
-  background-color: #2a2a2a;
+.desc-q {
+  font-weight: bold; }
+
+table th, table td {
+  text-align: center;
   border: 1px solid black;
+  padding-left: 15px;
+  padding-right: 15px; }
+
+/* Specific */
+#app-container {
   font-family: monospace; }
-  #calc-main #calc-display .display-row {
-    height: 53.3333333333px;
-    border: 1px solid black;
-    width: 318px;
-    overflow: scroll; }
-    #calc-main #calc-display .display-row::-webkit-scrollbar {
-      /* Scrollbar fix for MacOS not showing up when not in use (even on hover) */
-      width: 0;
-      height: 4px; }
-    #calc-main #calc-display .display-row > * {
-      font-family: inherit;
-      padding: 0 10px 0 10px;
-      background-color: transparent;
-      text-align: right; }
-      #calc-main #calc-display .display-row > *.invalid {
-        color: gray; }
-      #calc-main #calc-display .display-row > *.animate {
-        font-size: 32px; }
-    #calc-main #calc-display .display-row#result-row {
-      color: darkorange;
-      font-size: 30px; }
-      #calc-main #calc-display .display-row#result-row::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 140, 0, 0.8); }
-    #calc-main #calc-display .display-row#expression-row {
-      color: mediumaquamarine;
-      font-size: 20px; }
-      #calc-main #calc-display .display-row#expression-row::-webkit-scrollbar-thumb {
-        background-color: rgba(102, 205, 170, 0.8); }
-  #calc-main #calc-kpad .kpad-btn {
-    font-family: inherit;
-    font-weight: inherit;
-    font-size: 20px;
-    width: 80px;
-    height: 80px;
-    background-color: transparent;
-    color: darkorange;
+  #app-container #calc-main {
+    margin-right: 50px;
+    background-color: #2a2a2a;
     border: 1px solid black; }
-    #calc-main #calc-kpad .kpad-btn.big {
-      width: 160px; }
-    #calc-main #calc-kpad .kpad-btn.off-color {
-      color: mediumaquamarine; }
-    #calc-main #calc-kpad .kpad-btn:hover {
-      background-color: rgba(255, 255, 255, 0.15); }
-    #calc-main #calc-kpad .kpad-btn:focus {
-      outline: 0; }
-    #calc-main #calc-kpad .kpad-btn.animate {
-      background-color: rgba(255, 140, 0, 0.8); }
-      #calc-main #calc-kpad .kpad-btn.animate.off-color {
-        background-color: rgba(102, 205, 170, 0.8); }
+    #app-container #calc-main #calc-display .display-row {
+      height: 53.3333333333px;
+      border: 1px solid black;
+      width: 318px;
+      overflow: scroll; }
+      #app-container #calc-main #calc-display .display-row::-webkit-scrollbar {
+        /* Scrollbar fix for MacOS - scrollbar doesn't show up when not in use (even on hover) */
+        width: 0;
+        height: 4px; }
+      #app-container #calc-main #calc-display .display-row > * {
+        font-family: inherit;
+        padding: 0 10px 0 10px;
+        background-color: transparent;
+        text-align: right; }
+        #app-container #calc-main #calc-display .display-row > *.invalid {
+          color: gray; }
+        #app-container #calc-main #calc-display .display-row > *.animate {
+          font-size: 32px; }
+      #app-container #calc-main #calc-display .display-row#result-row {
+        color: darkorange;
+        font-size: 30px; }
+        #app-container #calc-main #calc-display .display-row#result-row::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 140, 0, 0.8); }
+      #app-container #calc-main #calc-display .display-row#expression-row {
+        color: mediumaquamarine;
+        font-size: 20px; }
+        #app-container #calc-main #calc-display .display-row#expression-row::-webkit-scrollbar-thumb {
+          background-color: rgba(102, 205, 170, 0.8); }
+    #app-container #calc-main #calc-kpad .kpad-btn {
+      font-family: inherit;
+      font-weight: inherit;
+      font-size: 20px;
+      width: 80px;
+      height: 80px;
+      background-color: transparent;
+      color: darkorange;
+      border: 1px solid black; }
+      #app-container #calc-main #calc-kpad .kpad-btn.big {
+        width: 160px; }
+      #app-container #calc-main #calc-kpad .kpad-btn.off-color {
+        color: mediumaquamarine; }
+      #app-container #calc-main #calc-kpad .kpad-btn:hover {
+        background-color: rgba(255, 255, 255, 0.15); }
+      #app-container #calc-main #calc-kpad .kpad-btn:focus {
+        outline: 0; }
+      #app-container #calc-main #calc-kpad .kpad-btn.animate {
+        background-color: rgba(255, 140, 0, 0.8); }
+        #app-container #calc-main #calc-kpad .kpad-btn.animate.off-color {
+          background-color: rgba(102, 205, 170, 0.8); }
 
 /*# sourceMappingURL=styles.css.map */
