@@ -65,20 +65,18 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_key_combinations_module__ = __webpack_require__(2);
 /**
  * Created by Alice Paquette on 12/27/2017
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 /* -- Modules ----------- */
-
-
-(() => {
+var calculations_module_1 = __webpack_require__(1);
+var key_combinations_module_1 = __webpack_require__(2);
+(function () {
     /*** Variables ***/
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
      * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
@@ -86,28 +84,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
      * which is then clicked programmatically. Finally, the value of the clicked button is evaluated and either
      * executed as a function or written to the expression as a character. */
     /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
-    const keyBindings = {
+    var keyBindings = {
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
         '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
         'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
         'Enter': 'wrap'
     };
     /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
-    const keypadButtons = {};
-    document.querySelectorAll('button.kpad-btn').forEach(button => {
+    var keypadButtons = {};
+    document.querySelectorAll('button.kpad-btn').forEach(function (button) {
         keypadButtons[button.value] = button;
     });
     /* Calculator display functionality ------------ */
-    const resultDiv = document.getElementById('result');
-    const expressionDiv = document.getElementById('expression');
-    let composing = false; // True if there was a user input in the last second
-    let timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
+    var resultDiv = document.getElementById('result');
+    var expressionDiv = document.getElementById('expression');
+    var composing = false; // True if there was a user input in the last second
+    var timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
     /* -- A tiny version of a redux store ------------ */
-    const store = {
+    var store = {
         expression: {
-            dispatch: (action, payload) => {
-                const oldState = expressionDiv.textContent || '';
-                let newState = oldState;
+            dispatch: function (action, payload) {
+                var oldState = expressionDiv.textContent || '';
+                var newState = oldState;
                 switch (action) {
                     case 'write':
                         newState = oldState + payload;
@@ -117,7 +115,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         break;
                     case 'wrap':
                         if (oldState !== '') {
-                            newState = `(${oldState})`;
+                            newState = "(" + oldState + ")";
                         }
                         break;
                     case 'allclear':
@@ -129,7 +127,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         result: {
-            dispatch: (action, payload) => {
+            dispatch: function (action, payload) {
                 switch (action) {
                     case 'update':
                         resultDiv.textContent = payload;
@@ -142,12 +140,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     /* -- Event Handlers --------- */
     /* Expression changes */
     function expressionChanged(e) {
-        let result;
-        let resultIsValid = true;
+        var result;
+        var resultIsValid = true;
         if (e.detail !== '') {
             try {
-                result = __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__["a" /* CalculationsModule */].resolveExpression(e.detail);
-                resultIsValid = __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__["a" /* CalculationsModule */].isDecimalFormat(result);
+                result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
+                resultIsValid = calculations_module_1.CalculationsModule.isDecimalFormat(result);
             }
             catch (e) {
                 resultIsValid = false;
@@ -167,7 +165,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
              * class is added in the callback to startOrResetComposingTimer. */
-            startOrResetComposingTimer(() => {
+            startOrResetComposingTimer(function () {
                 expressionDiv.classList.add('invalid');
             });
         }
@@ -194,9 +192,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
     /* -- Animation and styling ---------- **/
     /* Adds the class 'highlight' to a button for a user-defined amount of time (in ms) for the purposes of animation. */
-    function animateElement(el, timeout = 200) {
+    function animateElement(el, timeout) {
+        if (timeout === void 0) { timeout = 200; }
         el.classList.add('animate');
-        window.setTimeout(() => {
+        window.setTimeout(function () {
             el.classList.remove('animate');
         }, timeout);
     }
@@ -204,7 +203,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     function startOrResetComposingTimer(callback) {
         clearTimeout(timeoutId);
         composing = true;
-        timeoutId = window.setTimeout(() => {
+        timeoutId = window.setTimeout(function () {
             composing = false;
             if (callback)
                 callback();
@@ -215,26 +214,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     /* Expression changes */
     expressionDiv.addEventListener('change', expressionChanged);
     /* Keypad button clicks */
-    Object.keys(keypadButtons).forEach(k => {
+    Object.keys(keypadButtons).forEach(function (k) {
         keypadButtons[k].addEventListener('click', keypadButtonClicked);
     });
     /* Keydown */
-    document.addEventListener('keydown', (e) => {
-        const keybindFunction = keyBindings[__WEBPACK_IMPORTED_MODULE_1__modules_key_combinations_module__["a" /* KeyCombinationsModule */].convertToKeyCombination(e)];
+    document.addEventListener('keydown', function (e) {
+        var keybindFunction = keyBindings[key_combinations_module_1.KeyCombinationsModule.convertToKeyCombination(e)];
         if (keybindFunction) {
             keypadButtons[keybindFunction].click();
         }
     });
+    /* Check for OS to fix scrollbar issues on Firefox Quantum on Windows */
+    if (navigator.appVersion.indexOf("Win") != -1)
+        document.getElementById('app-container').classList.add('windows');
     /*** ------------------------------- ***/
 })();
 
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CalculationsModule; });
 /**
  * @author Created by Alice Paquette on 12/30/2017
  * @fileOverview This module can be used to parse and calculate basic mathematical expressions.
@@ -242,20 +243,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * addition '+', subtraction '-'.
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var CalculationsModule;
 (function (CalculationsModule) {
     /* Matches the content of any parentheses that contain no parentheses */
-    const matchDeepestParentheses = /\(([^()]+)\)/g;
+    var matchDeepestParentheses = /\(([^()]+)\)/g;
     /* Matches the leftmost binary multiplication or division */
-    const matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
+    var matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
     /* Matches the leftmost binary addition or subtraction operation (e.g. x+y) */
-    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
+    var matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
     /* Matches consecutive pluses (+) and/or minuses (-) */
-    const matchConsecutivePlusesMinuses = /[-+]{2,}/g;
+    var matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
-    const matchParenthesisMultiplications = /([\d)])\(/g;
+    var matchParenthesisMultiplications = /([\d)])\(/g;
     /* Matches a string in the numeric format F8.2 or Infinity */
-    const matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
+    var matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
     /* Resolvers -------------
      * These functions take basic mathematical expressions and resolve them by following the order of operations.
      * Valid operations: parentheses '()', multiplication '*', division '/', addition '+', and subtraction '-'.
@@ -268,7 +270,7 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveExpression(expression) {
-        let flattenedExpression = resolveParentheses(expression);
+        var flattenedExpression = resolveParentheses(expression);
         return resolveAdditionSubtraction(resolveMultiplicationDivision(flattenedExpression));
     }
     CalculationsModule.resolveExpression = resolveExpression;
@@ -283,9 +285,9 @@ var CalculationsModule;
      * @returns {string} - The flattened mathematical expression.
      */
     function resolveParentheses(expression) {
-        let newExpression = convertParenthesisMultiplications(expression);
-        let parenthesisFound = false;
-        newExpression = newExpression.replace(matchDeepestParentheses, (match, innerExpression) => {
+        var newExpression = convertParenthesisMultiplications(expression);
+        var parenthesisFound = false;
+        newExpression = newExpression.replace(matchDeepestParentheses, function (match, innerExpression) {
             parenthesisFound = true;
             /* Resolve multiplication and division first, then addition and subtraction */
             return resolveAdditionSubtraction(resolveMultiplicationDivision(innerExpression));
@@ -307,9 +309,9 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveMultiplicationDivision(expression) {
-        let newExpression;
-        let multiplicationDivisionFound = false;
-        newExpression = expression.replace(matchMultiplicationDivision, (match, savedGroup, operation, operator) => {
+        var newExpression;
+        var multiplicationDivisionFound = false;
+        newExpression = expression.replace(matchMultiplicationDivision, function (match, savedGroup, operation, operator) {
             multiplicationDivisionFound = true;
             return savedGroup + (operator === '*' ? multiply(operation) : divide(operation));
         });
@@ -332,9 +334,9 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveAdditionSubtraction(expression) {
-        let newExpression = cleanupExtraOperators(expression);
-        let additionSubtractionFound = false;
-        newExpression = newExpression.replace(matchAdditionSubtraction, (operation, operator) => {
+        var newExpression = cleanupExtraOperators(expression);
+        var additionSubtractionFound = false;
+        newExpression = newExpression.replace(matchAdditionSubtraction, function (operation, operator) {
             additionSubtractionFound = true;
             return sum(operation);
         });
@@ -386,8 +388,8 @@ var CalculationsModule;
      * @returns {string} - The cleaned up string.
      */
     function cleanupExtraOperators(expression) {
-        let newExpression;
-        newExpression = expression.replace(matchConsecutivePlusesMinuses, (operators) => {
+        var newExpression;
+        newExpression = expression.replace(matchConsecutivePlusesMinuses, function (operators) {
             return (operators.match(/-/g) || []).length % 2 === 1 ? '-' : '+';
         });
         /* Trim leading Plus '+' sign if necessary */
@@ -403,8 +405,8 @@ var CalculationsModule;
      * @returns {string}
      */
     function convertParenthesisMultiplications(expression) {
-        return expression.replace(matchParenthesisMultiplications, (match, leftTerm) => {
-            return `${leftTerm}*(`;
+        return expression.replace(matchParenthesisMultiplications, function (match, leftTerm) {
+            return leftTerm + "*(";
         });
     }
     CalculationsModule.convertParenthesisMultiplications = convertParenthesisMultiplications;
@@ -414,7 +416,7 @@ var CalculationsModule;
      * @returns {Error} - The error.
      */
     function InvalidOperationError(operation) {
-        return new Error(`Invalid Operation: '${operation}'`);
+        return new Error("Invalid Operation: '" + operation + "'");
     }
     /* Basic Math Operations -------------- */
     /**
@@ -428,14 +430,15 @@ var CalculationsModule;
      * @throws An Error with the provided invalid string if the operation's result is NaN.
      */
     function sum(operation) {
-        const op = operation.replace(/-/g, '+-');
+        var op = operation.replace(/-/g, '+-');
         /* We need to add a '0' at the beginning if the first character is an operator to
          * make sure the split and subsequent parseFloat do not result in NaN.
          * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseDecimalFormat--> NaN-5-3 = NaN
          * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseDecimalFormat--> 0-5-3 = -8  */
-        const terms = (/^\+/.test(op) ? `0${op}` : op).split('+');
-        let result = parseDecimalFormat(terms[0]);
-        for (let term of terms.slice(1)) {
+        var terms = (/^\+/.test(op) ? "0" + op : op).split('+');
+        var result = parseDecimalFormat(terms[0]);
+        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
+            var term = _a[_i];
             result = result + parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -457,9 +460,10 @@ var CalculationsModule;
     function multiply(operation) {
         if (operation.indexOf('*') === -1)
             throw InvalidOperationError(operation);
-        const terms = operation.split('*');
-        let result = parseDecimalFormat(terms[0]);
-        for (let term of terms.slice(1)) {
+        var terms = operation.split('*');
+        var result = parseDecimalFormat(terms[0]);
+        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
+            var term = _a[_i];
             result = result * parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -480,9 +484,10 @@ var CalculationsModule;
     function divide(operation) {
         if (operation.indexOf('/') === -1)
             throw InvalidOperationError(operation);
-        const terms = operation.split('/');
-        let result = parseDecimalFormat(terms[0]);
-        for (let term of terms.slice(1)) {
+        var terms = operation.split('/');
+        var result = parseDecimalFormat(terms[0]);
+        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
+            var term = _a[_i];
             result = result / parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -491,20 +496,20 @@ var CalculationsModule;
             return result.toString();
     }
     CalculationsModule.divide = divide;
-})(CalculationsModule || (CalculationsModule = {}));
+})(CalculationsModule = exports.CalculationsModule || (exports.CalculationsModule = {}));
 
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return KeyCombinationsModule; });
 /**
  * @author Created by Alice Paquette on 12/31/2017
  * @fileOverview This module is used to track and exploit key combinations for use with keyboard shortcuts.
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var KeyCombinationsModule;
 (function (KeyCombinationsModule) {
     /**
@@ -516,7 +521,7 @@ var KeyCombinationsModule;
      * different key combination in a different keyboard layout or locale.
      * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
      */
-    const nonCharacterKeys = [
+    var nonCharacterKeys = [
         'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Backspace', 'Delete',
         'Enter', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'Space', 'CapsLock', 'Tab'
     ];
@@ -528,14 +533,14 @@ var KeyCombinationsModule;
      * @returns {string} - A string in the format 'Modifier+Key'.
      */
     function convertToKeyCombination(e) {
-        let payload = '';
-        let mods = listActiveModifiers(e);
+        var payload = '';
+        var mods = listActiveModifiers(e);
         if (!isModifier(e)) {
             // Remove shift if the KeyboardEvent.key is shift dependent
             if (e.shiftKey && !nonCharacterKeys.includes(e.key)) {
                 mods.splice(mods.indexOf('Shift'));
             }
-            payload = `${mods.join('+')}${mods.length > 0 ? '+' : ''}${e.key}`;
+            payload = "" + mods.join('+') + (mods.length > 0 ? '+' : '') + e.key;
         }
         return payload;
     }
@@ -548,7 +553,7 @@ var KeyCombinationsModule;
      * @returns {string[]} - An array of active modifiers, e.g. ['Control', 'Shift']
      */
     function listActiveModifiers(e) {
-        let payload = [];
+        var payload = [];
         if (e.ctrlKey)
             payload.push('Control');
         if (e.shiftKey)
@@ -570,7 +575,7 @@ var KeyCombinationsModule;
         return e.key === 'Control' || e.key === 'Shift' || e.key === 'Alt' || e.key === 'Meta';
     }
     KeyCombinationsModule.isModifier = isModifier;
-})(KeyCombinationsModule || (KeyCombinationsModule = {}));
+})(KeyCombinationsModule = exports.KeyCombinationsModule || (exports.KeyCombinationsModule = {}));
 
 
 /***/ })

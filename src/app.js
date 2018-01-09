@@ -154,5 +154,8 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
             keypadButtons[keybindFunction].click();
         }
     });
+    /* Check for OS to fix scrollbar issues on Firefox Quantum on Windows */
+    if (navigator.appVersion.indexOf("Win") != -1)
+        document.getElementById('app-container').classList.add('windows');
     /*** ------------------------------- ***/
 })();
