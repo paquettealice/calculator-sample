@@ -17,7 +17,7 @@ export module CalculationsModule {
   /* Matches consecutive pluses (+) and/or minuses (-) */
   const matchConsecutivePlusesMinuses: RegExp = /[-+]{2,}/g;
   /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
-  const matchParenthesisMultiplications: RegExp = /([\d)])\(/g;
+  const matchParenthesisMultiplications: RegExp = /(?:([\d)])\(|\)([\d(]))/g;
   /* Matches a string in the numeric format F8.2 or Infinity */
   const matchDecimalFormat: RegExp = /^(-?\d+(\.\d+)?|Infinity)$/;
 
@@ -183,8 +183,8 @@ export module CalculationsModule {
    * @returns {string}
    */
   export function convertParenthesisMultiplications(expression: string): string {
-    return expression.replace(matchParenthesisMultiplications, (match, leftTerm) => {
-      return `${leftTerm}*(`;
+    return expression.replace(matchParenthesisMultiplications, (match, leftTerm, rightTerm) => {
+      return leftTerm ? `${leftTerm}*(` : `)*${rightTerm}`;
     })
   }
 

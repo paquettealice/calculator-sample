@@ -257,7 +257,7 @@ var CalculationsModule;
     /* Matches consecutive pluses (+) and/or minuses (-) */
     var matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
-    var matchParenthesisMultiplications = /([\d)])\(/g;
+    var matchParenthesisMultiplications = /(?:([\d)])\(|\)([\d(]))/g;
     /* Matches a string in the numeric format F8.2 or Infinity */
     var matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
     /* Resolvers -------------
@@ -407,8 +407,8 @@ var CalculationsModule;
      * @returns {string}
      */
     function convertParenthesisMultiplications(expression) {
-        return expression.replace(matchParenthesisMultiplications, function (match, leftTerm) {
-            return leftTerm + "*(";
+        return expression.replace(matchParenthesisMultiplications, function (match, leftTerm, rightTerm) {
+            return leftTerm ? leftTerm + "*(" : ")*" + rightTerm;
         });
     }
     CalculationsModule.convertParenthesisMultiplications = convertParenthesisMultiplications;

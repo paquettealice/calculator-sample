@@ -137,6 +137,9 @@ test('convertParenthesisMultiplications "(5)" should equal "(5)"', () => {
 test('convertParenthesisMultiplications "-(5)" should equal "-(5)"', () => {
   expect(C.convertParenthesisMultiplications('-(5)')).toBe('-(5)');
 });
+test('convertParenthesisMultiplications "-(5+3)2" should equal "-(5+3)*2"', () => {
+  expect(C.convertParenthesisMultiplications('-(5+3)2')).toBe('-(5+3)*2');
+});
 
 /* sum */
 test('sum "1+2" should equal "3"', () => {
