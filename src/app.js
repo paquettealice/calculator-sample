@@ -94,7 +94,7 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
         }
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
-             * class is added in the callback to startOrResetComposingTimer. */
+             * class is added in the callback of startOrResetComposingTimer. */
             startOrResetComposingTimer(function () {
                 expressionDiv.classList.add('invalid');
             });
