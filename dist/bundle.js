@@ -65,19 +65,17 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_key_combinations_module__ = __webpack_require__(2);
 /**
  * Created by Alice Paquette on 12/27/2017
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 /* -- Modules ----------- */
-
-
+const calculations_module_1 = __webpack_require__(1);
+const key_combinations_module_1 = __webpack_require__(2);
 (() => {
     /*** Variables ***/
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
@@ -146,8 +144,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         let resultIsValid = true;
         if (e.detail !== '') {
             try {
-                result = __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__["a" /* CalculationsModule */].resolveExpression(e.detail);
-                resultIsValid = __WEBPACK_IMPORTED_MODULE_0__modules_calculations_module__["a" /* CalculationsModule */].isDecimalFormat(result);
+                result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
+                resultIsValid = calculations_module_1.CalculationsModule.isDecimalFormat(result);
             }
             catch (e) {
                 resultIsValid = false;
@@ -220,10 +218,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     });
     /* Keydown */
     document.addEventListener('keydown', (e) => {
-        const keybindFunction = keyBindings[__WEBPACK_IMPORTED_MODULE_1__modules_key_combinations_module__["a" /* KeyCombinationsModule */].convertToKeyCombination(e)];
+        const keybindFunction = keyBindings[key_combinations_module_1.KeyCombinationsModule.convertToKeyCombination(e)];
         if (keybindFunction) {
             keypadButtons[keybindFunction].click();
-            return false; /* Prevent browser keyboard shortcuts from conflicting with the app's */
+            e.preventDefault(); /* Prevent browser keyboard shortcuts from conflicting with the app's */
         }
     });
     /* Check for OS and browser to fix scrollbar issues on Firefox Quantum on Windows */
@@ -233,14 +231,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.getElementById('app-container').classList.add('firefox');
     /*** ------------------------------- ***/
 })();
-
+//# sourceMappingURL=app.js.map
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CalculationsModule; });
 /**
  * @author Created by Alice Paquette on 12/30/2017
  * @fileOverview This module can be used to parse and calculate basic mathematical expressions.
@@ -248,6 +245,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * addition '+', subtraction '-'.
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var CalculationsModule;
 (function (CalculationsModule) {
     /* Matches the content of any parentheses that contain no parentheses */
@@ -497,20 +495,20 @@ var CalculationsModule;
             return result.toString();
     }
     CalculationsModule.divide = divide;
-})(CalculationsModule || (CalculationsModule = {}));
-
+})(CalculationsModule = exports.CalculationsModule || (exports.CalculationsModule = {}));
+//# sourceMappingURL=calculations.module.js.map
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return KeyCombinationsModule; });
 /**
  * @author Created by Alice Paquette on 12/31/2017
  * @fileOverview This module is used to track and exploit key combinations for use with keyboard shortcuts.
  */
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var KeyCombinationsModule;
 (function (KeyCombinationsModule) {
     /**
@@ -576,8 +574,8 @@ var KeyCombinationsModule;
         return e.key === 'Control' || e.key === 'Shift' || e.key === 'Alt' || e.key === 'Meta';
     }
     KeyCombinationsModule.isModifier = isModifier;
-})(KeyCombinationsModule || (KeyCombinationsModule = {}));
-
+})(KeyCombinationsModule = exports.KeyCombinationsModule || (exports.KeyCombinationsModule = {}));
+//# sourceMappingURL=key-combinations.module.js.map
 
 /***/ })
 /******/ ]);

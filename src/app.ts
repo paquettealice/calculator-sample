@@ -166,7 +166,7 @@ import { KeyCombinationsModule as KC } from './modules/key-combinations.module';
     const keybindFunction = keyBindings[KC.convertToKeyCombination(e)];
     if (keybindFunction) {
       keypadButtons[keybindFunction].click();
-      return false; /* Prevent browser keyboard shortcuts from conflicting with the app's */
+      e.preventDefault(); /* Prevent browser keyboard shortcuts from conflicting with the app's */
     }
   });
   /* Check for OS and browser to fix scrollbar issues on Firefox Quantum on Windows */
