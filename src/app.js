@@ -4,9 +4,9 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 /* -- Modules ----------- */
-var calculations_module_1 = require("./modules/calculations.module");
-var key_combinations_module_1 = require("./modules/key-combinations.module");
-(function () {
+const calculations_module_1 = require("./modules/calculations.module");
+const key_combinations_module_1 = require("./modules/key-combinations.module");
+(() => {
     /*** Variables ***/
     /* -- Keyboard Shortcuts and Keypad Functionality -------------
      * Shortcuts work by listening to the keydown event, converting it into a key combination, and binding that to
@@ -14,28 +14,28 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
      * which is then clicked programmatically. Finally, the value of the clicked button is evaluated and either
      * executed as a function or written to the expression as a character. */
     /* Hash table for key combinations and keypad button values ( keyCombination: keypadButtonValue ) */
-    var keyBindings = {
+    const keyBindings = {
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '0': '0',
         '.': '.', '(': '(', ')': ')', '+': '+', '-': '-', '*': '*', 'x': '*', 'X': '*', '/': '/',
         'Delete': 'delete', 'Backspace': 'delete', 'Control+Delete': 'allclear', 'Control+Backspace': 'allclear',
         'Enter': 'wrap'
     };
     /* Hash table for keypad button values and keypad buttons ( keypadButtonValue: keypadButton ) */
-    var keypadButtons = {};
-    document.querySelectorAll('button.kpad-btn').forEach(function (button) {
+    const keypadButtons = {};
+    document.querySelectorAll('button.kpad-btn').forEach(button => {
         keypadButtons[button.value] = button;
     });
     /* Calculator display functionality ------------ */
-    var resultDiv = document.getElementById('result');
-    var expressionDiv = document.getElementById('expression');
-    var composing = false; // True if there was a user input in the last second
-    var timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
+    const resultDiv = document.getElementById('result');
+    const expressionDiv = document.getElementById('expression');
+    let composing = false; // True if there was a user input in the last second
+    let timeoutId; // The ID of the current Window.timeout used to determine if the user is composing
     /* -- A tiny version of a redux store ------------ */
-    var store = {
+    const store = {
         expression: {
-            dispatch: function (action, payload) {
-                var oldState = expressionDiv.textContent || '';
-                var newState = oldState;
+            dispatch: (action, payload) => {
+                const oldState = expressionDiv.textContent || '';
+                let newState = oldState;
                 switch (action) {
                     case 'write':
                         newState = oldState + payload;
@@ -45,7 +45,7 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
                         break;
                     case 'wrap':
                         if (oldState !== '') {
-                            newState = "(" + oldState + ")";
+                            newState = `(${oldState})`;
                         }
                         break;
                     case 'allclear':
@@ -57,7 +57,7 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
             }
         },
         result: {
-            dispatch: function (action, payload) {
+            dispatch: (action, payload) => {
                 switch (action) {
                     case 'update':
                         resultDiv.textContent = payload;
@@ -70,8 +70,8 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
     /* -- Event Handlers --------- */
     /* Expression changes */
     function expressionChanged(e) {
-        var result;
-        var resultIsValid = true;
+        let result;
+        let resultIsValid = true;
         if (e.detail !== '') {
             try {
                 result = calculations_module_1.CalculationsModule.resolveExpression(e.detail);
@@ -95,7 +95,7 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
         else {
             /* If the result is invalid, we want to wait a second before updating the display. Because of this, the 'invalid'
              * class is added in the callback of startOrResetComposingTimer. */
-            startOrResetComposingTimer(function () {
+            startOrResetComposingTimer(() => {
                 expressionDiv.classList.add('invalid');
             });
         }
@@ -122,10 +122,9 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
     }
     /* -- Animation and styling ---------- **/
     /* Adds the class 'highlight' to a button for a user-defined amount of time (in ms) for the purposes of animation. */
-    function animateElement(el, timeout) {
-        if (timeout === void 0) { timeout = 200; }
+    function animateElement(el, timeout = 200) {
         el.classList.add('animate');
-        window.setTimeout(function () {
+        window.setTimeout(() => {
             el.classList.remove('animate');
         }, timeout);
     }
@@ -133,7 +132,7 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
     function startOrResetComposingTimer(callback) {
         clearTimeout(timeoutId);
         composing = true;
-        timeoutId = window.setTimeout(function () {
+        timeoutId = window.setTimeout(() => {
             composing = false;
             if (callback)
                 callback();
@@ -144,14 +143,15 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
     /* Expression changes */
     expressionDiv.addEventListener('change', expressionChanged);
     /* Keypad button clicks */
-    Object.keys(keypadButtons).forEach(function (k) {
+    Object.keys(keypadButtons).forEach(k => {
         keypadButtons[k].addEventListener('click', keypadButtonClicked);
     });
     /* Keydown */
-    document.addEventListener('keydown', function (e) {
-        var keybindFunction = keyBindings[key_combinations_module_1.KeyCombinationsModule.convertToKeyCombination(e)];
+    document.addEventListener('keydown', (e) => {
+        const keybindFunction = keyBindings[key_combinations_module_1.KeyCombinationsModule.convertToKeyCombination(e)];
         if (keybindFunction) {
             keypadButtons[keybindFunction].click();
+            return false; /* Prevent browser keyboard shortcuts from conflicting with the app's */
         }
     });
     /* Check for OS and browser to fix scrollbar issues on Firefox Quantum on Windows */
@@ -161,3 +161,4 @@ var key_combinations_module_1 = require("./modules/key-combinations.module");
         document.getElementById('app-container').classList.add('firefox');
     /*** ------------------------------- ***/
 })();
+//# sourceMappingURL=app.js.map

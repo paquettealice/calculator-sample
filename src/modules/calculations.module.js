@@ -9,17 +9,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CalculationsModule;
 (function (CalculationsModule) {
     /* Matches the content of any parentheses that contain no parentheses */
-    var matchDeepestParentheses = /\(([^()]+)\)/g;
+    const matchDeepestParentheses = /\(([^()]+)\)/g;
     /* Matches the leftmost binary multiplication or division */
-    var matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
+    const matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
     /* Matches the leftmost binary addition or subtraction operation (e.g. x+y) */
-    var matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
+    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
     /* Matches consecutive pluses (+) and/or minuses (-) */
-    var matchConsecutivePlusesMinuses = /[-+]{2,}/g;
+    const matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
-    var matchParenthesisMultiplications = /(?:([\d)])\(|\)([\d(]))/g;
+    const matchParenthesisMultiplications = /(?:([\d)])\(|\)([\d(]))/g;
     /* Matches a string in the numeric format F8.2 or Infinity */
-    var matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
+    const matchDecimalFormat = /^(-?\d+(\.\d+)?|Infinity)$/;
     /* Resolvers -------------
      * These functions take basic mathematical expressions and resolve them by following the order of operations.
      * Valid operations: parentheses '()', multiplication '*', division '/', addition '+', and subtraction '-'.
@@ -32,7 +32,7 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveExpression(expression) {
-        var flattenedExpression = resolveParentheses(expression);
+        let flattenedExpression = resolveParentheses(expression);
         return resolveAdditionSubtraction(resolveMultiplicationDivision(flattenedExpression));
     }
     CalculationsModule.resolveExpression = resolveExpression;
@@ -47,9 +47,9 @@ var CalculationsModule;
      * @returns {string} - The flattened mathematical expression.
      */
     function resolveParentheses(expression) {
-        var newExpression = convertParenthesisMultiplications(expression);
-        var parenthesisFound = false;
-        newExpression = newExpression.replace(matchDeepestParentheses, function (match, innerExpression) {
+        let newExpression = convertParenthesisMultiplications(expression);
+        let parenthesisFound = false;
+        newExpression = newExpression.replace(matchDeepestParentheses, (match, innerExpression) => {
             parenthesisFound = true;
             /* Resolve multiplication and division first, then addition and subtraction */
             return resolveAdditionSubtraction(resolveMultiplicationDivision(innerExpression));
@@ -71,9 +71,9 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveMultiplicationDivision(expression) {
-        var newExpression;
-        var multiplicationDivisionFound = false;
-        newExpression = expression.replace(matchMultiplicationDivision, function (match, savedGroup, operation, operator) {
+        let newExpression;
+        let multiplicationDivisionFound = false;
+        newExpression = expression.replace(matchMultiplicationDivision, (match, savedGroup, operation, operator) => {
             multiplicationDivisionFound = true;
             return savedGroup + (operator === '*' ? multiply(operation) : divide(operation));
         });
@@ -96,9 +96,9 @@ var CalculationsModule;
      * @returns {string} - The resolved mathematical expression.
      */
     function resolveAdditionSubtraction(expression) {
-        var newExpression = cleanupExtraOperators(expression);
-        var additionSubtractionFound = false;
-        newExpression = newExpression.replace(matchAdditionSubtraction, function (operation, operator) {
+        let newExpression = cleanupExtraOperators(expression);
+        let additionSubtractionFound = false;
+        newExpression = newExpression.replace(matchAdditionSubtraction, (operation, operator) => {
             additionSubtractionFound = true;
             return sum(operation);
         });
@@ -150,8 +150,8 @@ var CalculationsModule;
      * @returns {string} - The cleaned up string.
      */
     function cleanupExtraOperators(expression) {
-        var newExpression;
-        newExpression = expression.replace(matchConsecutivePlusesMinuses, function (operators) {
+        let newExpression;
+        newExpression = expression.replace(matchConsecutivePlusesMinuses, (operators) => {
             return (operators.match(/-/g) || []).length % 2 === 1 ? '-' : '+';
         });
         /* Trim leading Plus '+' sign if necessary */
@@ -167,8 +167,8 @@ var CalculationsModule;
      * @returns {string}
      */
     function convertParenthesisMultiplications(expression) {
-        return expression.replace(matchParenthesisMultiplications, function (match, leftTerm, rightTerm) {
-            return leftTerm ? leftTerm + "*(" : ")*" + rightTerm;
+        return expression.replace(matchParenthesisMultiplications, (match, leftTerm, rightTerm) => {
+            return leftTerm ? `${leftTerm}*(` : `)*${rightTerm}`;
         });
     }
     CalculationsModule.convertParenthesisMultiplications = convertParenthesisMultiplications;
@@ -178,7 +178,7 @@ var CalculationsModule;
      * @returns {Error} - The error.
      */
     function InvalidOperationError(operation) {
-        return new Error("Invalid Operation: '" + operation + "'");
+        return new Error(`Invalid Operation: '${operation}'`);
     }
     /* Basic Math Operations -------------- */
     /**
@@ -192,15 +192,14 @@ var CalculationsModule;
      * @throws An Error with the provided invalid string if the operation's result is NaN.
      */
     function sum(operation) {
-        var op = operation.replace(/-/g, '+-');
+        const op = operation.replace(/-/g, '+-');
         /* We need to add a '0' at the beginning if the first character is an operator to
          * make sure the split and subsequent parseFloat do not result in NaN.
          * Without the '0': '-5-3' --split--> ['', '5', '3'] --parseDecimalFormat--> NaN-5-3 = NaN
          * With the '0': '0-5-3' --split--> ['0', '5', '3'] --parseDecimalFormat--> 0-5-3 = -8  */
-        var terms = (/^\+/.test(op) ? "0" + op : op).split('+');
-        var result = parseDecimalFormat(terms[0]);
-        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
-            var term = _a[_i];
+        const terms = (/^\+/.test(op) ? `0${op}` : op).split('+');
+        let result = parseDecimalFormat(terms[0]);
+        for (let term of terms.slice(1)) {
             result = result + parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -222,10 +221,9 @@ var CalculationsModule;
     function multiply(operation) {
         if (operation.indexOf('*') === -1)
             throw InvalidOperationError(operation);
-        var terms = operation.split('*');
-        var result = parseDecimalFormat(terms[0]);
-        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
-            var term = _a[_i];
+        const terms = operation.split('*');
+        let result = parseDecimalFormat(terms[0]);
+        for (let term of terms.slice(1)) {
             result = result * parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -246,10 +244,9 @@ var CalculationsModule;
     function divide(operation) {
         if (operation.indexOf('/') === -1)
             throw InvalidOperationError(operation);
-        var terms = operation.split('/');
-        var result = parseDecimalFormat(terms[0]);
-        for (var _i = 0, _a = terms.slice(1); _i < _a.length; _i++) {
-            var term = _a[_i];
+        const terms = operation.split('/');
+        let result = parseDecimalFormat(terms[0]);
+        for (let term of terms.slice(1)) {
             result = result / parseDecimalFormat(term);
         }
         if (isNaN(result))
@@ -259,3 +256,4 @@ var CalculationsModule;
     }
     CalculationsModule.divide = divide;
 })(CalculationsModule = exports.CalculationsModule || (exports.CalculationsModule = {}));
+//# sourceMappingURL=calculations.module.js.map
