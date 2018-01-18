@@ -163,8 +163,8 @@ var CalculationsModule;
      * Multiplication '*' sign then returns the resulting string.
      * Example: '-5(3+3)(-2)' -> '-5*(3+3)*(-2)'
      *
-     * @param {string} expression - The string that will
-     * @returns {string}
+     * @param {string} expression - The string to converted.
+     * @returns {string} - The converted string.
      */
     function convertParenthesisMultiplications(expression) {
         return expression.replace(matchParenthesisMultiplications, (match, leftTerm, rightTerm) => {
