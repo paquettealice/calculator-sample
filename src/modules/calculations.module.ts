@@ -13,7 +13,7 @@ export module CalculationsModule {
   /* Matches the leftmost binary multiplication or division */
   const matchMultiplicationDivision: RegExp = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
   /* Matches the leftmost binary addition or subtraction operation (e.g. x+y) */
-  const matchAdditionSubtraction: RegExp = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
+  const matchAdditionSubtraction: RegExp = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/;
   /* Matches consecutive pluses (+) and/or minuses (-) */
   const matchConsecutivePlusesMinuses: RegExp = /[-+]{2,}/g;
   /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */

@@ -49,6 +49,12 @@ test('resolveAdditionSubtraction "0" should equal "0"', () => {
 test('resolveAdditionSubtraction "-2" should equal "-2"', () => {
     expect(calculations_module_1.CalculationsModule.resolveAdditionSubtraction('-2')).toBe('-2');
 });
+test('resolveAdditionSubtraction "12+3-0.2-0.3" should equal "14.5"', () => {
+    expect(calculations_module_1.CalculationsModule.resolveAdditionSubtraction('12+3-0.2-0.3')).toBe('14.5');
+});
+test('resolveAdditionSubtraction "12+3-1-1" should equal "13"', () => {
+    expect(calculations_module_1.CalculationsModule.resolveAdditionSubtraction('12+3-1-1')).toBe('13');
+});
 /* isDecimalFormat */
 test('isDecimalFormat "0" should equal true', () => {
     expect(calculations_module_1.CalculationsModule.isDecimalFormat('0')).toBe(true);

@@ -13,7 +13,7 @@ var CalculationsModule;
     /* Matches the leftmost binary multiplication or division */
     const matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
     /* Matches the leftmost binary addition or subtraction operation (e.g. x+y) */
-    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
+    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/;
     /* Matches consecutive pluses (+) and/or minuses (-) */
     const matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */

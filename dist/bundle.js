@@ -253,7 +253,7 @@ var CalculationsModule;
     /* Matches the leftmost binary multiplication or division */
     const matchMultiplicationDivision = /(^|[-+*/])(-?[\d.]+([*/])-?[.\d]+)/;
     /* Matches the leftmost binary addition or subtraction operation (e.g. x+y) */
-    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/g;
+    const matchAdditionSubtraction = /(?:^-|^\+)?[\d.]+([-+])-?[.\d]+/;
     /* Matches consecutive pluses (+) and/or minuses (-) */
     const matchConsecutivePlusesMinuses = /[-+]{2,}/g;
     /* Matches the relatively common 'parenthesis multiplication' (e.g. 3(1+1) == 3*(1+1) or (-2)(-5) == -2*-5) */
@@ -403,8 +403,8 @@ var CalculationsModule;
      * Multiplication '*' sign then returns the resulting string.
      * Example: '-5(3+3)(-2)' -> '-5*(3+3)*(-2)'
      *
-     * @param {string} expression - The string that will
-     * @returns {string}
+     * @param {string} expression - The string to converted.
+     * @returns {string} - The converted string.
      */
     function convertParenthesisMultiplications(expression) {
         return expression.replace(matchParenthesisMultiplications, (match, leftTerm, rightTerm) => {
